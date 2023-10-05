@@ -3,9 +3,9 @@ Auticko ktere jezdi po mistnoti a vytváří její mapu
 
 # Použité součástky
 
-[Motory kol](https://www.laskakit.cz/dc-motorek-130-3v-16500-rpm/)
-
 2x Rpi pi pico
+
+[Motory kol](https://www.laskakit.cz/dc-motorek-130-3v-16500-rpm/)
 
 [Otočná kontaktní průchodka, 4 vodiče](https://www.laskakit.cz/otocna-kontaktni-pruchodka--4-vodice/)
 
