@@ -25,7 +25,7 @@ Tento program bude řídit pohyb vozítka v souřadnicovém poli. Bude přijíma
 - API pro přijímání povelů k pohybu o určitý počet souřadnic v daném směru (dopředu, dozadu, doleva, doprava).
 - Překlad příkazů na konkrétní pohyby omni kol pro dosažení požadovaného cíle v souřadnicovém poli.
 
-# 2. Program pro mapování místnosti:
+## 2. Program pro mapování místnosti:
 Tento program bude kromě mapování také přijímat aktuální polohu vozítka od skriptu pro řízení vozidla. Zahrnuje:
 
 - Vytváření mapy místnosti, kde jedna jednotka bude reprezentovat 10 cm v reálném světě.
@@ -34,7 +34,7 @@ Tento program bude kromě mapování také přijímat aktuální polohu vozítka
 - Ukládání dat do pole nebo souboru, který reprezentuje mapu místnosti.
 - Poskytování těchto informací skriptu pro řízení vozidla na vyžádání.
 
-# 3. Skript pro řízení vozidla na základě mapy:
+## 3. Skript pro řízení vozidla na základě mapy:
 Tento skript bude řídit pohyb vozidla na základě aktuální mapy místnosti a bude poskytovat aktuální informace o svém pohybu programu pro mapování. Zahrnuje:
 
 - Pravidelně aktualizovat program pro mapování o svůj aktuální pohyb, včetně souřadnic.
