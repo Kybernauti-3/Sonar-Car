@@ -1,6 +1,7 @@
 import machine
 import utime
 import math
+import json
 from machine import Pin
 from utime import sleep
 
@@ -15,19 +16,15 @@ def LED():
 
 LED()
 
-# Inicializace GPIO piny pro krokový motor
-motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), machine.Pin(4, machine.Pin.OUT), machine.Pin(17, machine.Pin.OUT)]
-step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
-
-# Inicializace GPIO piny pro HC-SR04
+# Inicializace mapy a pozice vozítka
 room_map = {}  # Mapa místnosti, kde každá buňka je 10x10 cm
 robot_position = (0, 0)  # Aktuální pozice vozítka v buňkách
 robot_angle_degrees = 0  # Aktuální úhel vozítka (0 stupňů je směr nahoru)
 
 # Funkce pro získání vzdálenosti ze senzoru HC-SR04
 def get_distance():
-    TRIG_PIN = machine.Pin(20, machine.Pin.OUT)
-    ECHO_PIN = machine.Pin(21, machine.Pin.IN)
+    TRIG_PIN = machine.Pin(1, machine.Pin.OUT)
+    ECHO_PIN = machine.Pin(2, machine.Pin.IN)
 
     TRIG_PIN.value(1)
     utime.sleep_us(10)
@@ -69,6 +66,23 @@ def update_map(distance, angle_degrees):
     # Aktualizace pozice vozítka
     robot_position = (new_x, new_y)
 
+# Funkce pro uložení mapy do souboru
+def save_map(filename):
+    with open(filename, 'w') as file:
+        json.dump(room_map, file)
+
+# Funkce pro načtení nové pozice vozítka ze sdíleného souboru
+def get_new_robot_position(filename):
+    try:
+        with open(filename, 'r') as file:
+            data = json.load(file)
+            return data["position"]
+    except OSError:
+        return None
+
+# Sdílený soubor pro komunikaci s řídícím skriptem
+shared_filename = "shared_data.json"
+
 try:
     # Ovládání krokového motoru pro otáčení o 360 stupňů s mapováním
     for i in range(4):  # 4 zastávky o 90 stupních
@@ -80,17 +94,26 @@ try:
         # Po každé zastávce otočte vozítko o 90 stupňů
         rotate_motor_90_degrees()
         robot_angle_degrees += 90
-    
-    # Výpis výsledné mapy
-    for y in range(-10, 11):
-        for x in range(-10, 11):
-            if (x, y) == robot_position:
-                print("R", end=' ')  # Aktuální pozice vozítka
-            elif (x, y) in room_map:
-                print("1", end=' ')  # Překážka
-            else:
-                print("0", end=' ')  # Volný prostor
-        print()
+
+    # Uložení mapy po každém mapovacím cyklu
+    save_map("room_map.json")
+
+    # Zde můžete periodicky číst novou pozici vozítka ze sdíleného souboru
+    while True:
+        new_position = get_new_robot_position(shared_filename)
+        if new_position:
+            robot_position = new_position
+
+        # Výpis výsledné mapy
+        for y in range(-10, 11):
+            for x in range(-10, 11):
+                if (x, y) == robot_position:
+                    print("R", end=' ')  # Aktuální pozice vozítka
+                elif (x, y) in room_map:
+                    print("1", end=' ')  # Překážka
+                else:
+                    print("0", end=' ')  # Volný prostor
+            print()
 
 finally:
     # Vypnutí motoru a uvolnění GPIO pinů
