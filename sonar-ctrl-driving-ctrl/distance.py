@@ -1,8 +1,8 @@
 from machine import Pin
 from utime import sleep, sleep_us, ticks_us
 
-trigger = Pin(20, Pin.OUT)
-echo = Pin(21, Pin.IN)
+trigger = Pin(21, Pin.OUT)
+echo = Pin(20, Pin.IN)
 rychlost_zvuku = 0.0343
 
 def vypocet_vzdalenosti():
@@ -26,4 +26,4 @@ def vypocet_vzdalenosti():
 
 while True:
     vypocet_vzdalenosti()
-    sleep(0.4)
+    sleep(1)

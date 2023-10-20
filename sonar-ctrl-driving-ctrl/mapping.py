@@ -2,19 +2,9 @@ import machine
 import utime
 import math
 import json
-from machine import Pin
-from utime import sleep
+import led
 
-pin = Pin("LED", Pin.OUT)
-
-def LED():
-    print("LED")
-    pin.on()
-    sleep(1)
-    pin.off()
-    sleep(1)
-
-LED()
+led.BLIK() # protoze proc ne xddd
 
 # Inicializace mapy a pozice vozítka
 room_map = {}  # Mapa místnosti, kde každá buňka je 10x10 cm
@@ -23,8 +13,8 @@ robot_angle_degrees = 0  # Aktuální úhel vozítka (0 stupňů je směr nahoru
 
 # Funkce pro získání vzdálenosti ze senzoru HC-SR04
 def get_distance():
-    TRIG_PIN = machine.Pin(1, machine.Pin.OUT)
-    ECHO_PIN = machine.Pin(2, machine.Pin.IN)
+    TRIG_PIN = machine.Pin(21, machine.Pin.OUT)
+    ECHO_PIN = machine.Pin(20, machine.Pin.IN)
 
     TRIG_PIN.value(1)
     utime.sleep_us(10)
