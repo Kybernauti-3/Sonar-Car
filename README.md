@@ -11,6 +11,10 @@ Auticko ktere jezdi po mistnoti a vytváří její mapu
 
 [Ultrazvukový senzor vzálenosti](https://www.laskakit.cz/ultrazvukovy-meric-vzdalenosti-hc-sr04/)
 
+https://www.laskakit.cz/h-mustek-radic-l9110s/
+
+https://www.laskakit.cz/krokovy-motor-28byj-48/
+
 [Omniwheels](https://www.printables.com/cs/model/240565-kinisi-mecanum-wheels-model-3-100-mm-10-rollers)
 
 Drátování
