@@ -4,7 +4,11 @@ import math
 import json
 import led
 
-led.BLIK() # protoze proc ne xddd
+led.BLIK()  # Proč ne, že? ;)
+
+# Inicializace GPIO piny pro krokový motor
+motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), machine.Pin(4, machine.Pin.OUT), machine.Pin(17, machine.Pin.OUT)]
+step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
 
 # Inicializace mapy a pozice vozítka
 room_map = {}  # Mapa místnosti, kde každá buňka je 10x10 cm
