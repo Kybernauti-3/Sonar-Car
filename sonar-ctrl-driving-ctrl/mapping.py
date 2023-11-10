@@ -1,5 +1,5 @@
 import machine
-import utime
+from utime import sleep, sleep_us, ticks_us
 import math
 import json
 import led
@@ -17,22 +17,27 @@ robot_angle_degrees = 0  # Aktuální úhel vozítka (0 stupňů je směr nahoru
 
 # Funkce pro získání vzdálenosti ze senzoru HC-SR04
 def get_distance():
-    TRIG_PIN = machine.Pin(21, machine.Pin.OUT)
-    ECHO_PIN = machine.Pin(20, machine.Pin.IN)
+    trigger = machine.Pin(21, machine.Pin.OUT)
+    echo = machine.Pin(20, machine.Pin.IN)
+    rychlost_zvuku = 0.0343
 
-    TRIG_PIN.value(1)
-    utime.sleep_us(10)
-    TRIG_PIN.value(0)
+    trigger.low()
+    sleep_us(20)
+    trigger.high()
+    sleep_us(10)
+    trigger.low()
     
-    while ECHO_PIN.value() == 0:
-        pulse_start = utime.ticks_us()
+    zacatek = 0  # Define zacatek before the loops
+    konec = 0  # Define konec before the loops
     
-    while ECHO_PIN.value() == 1:
-        pulse_end = utime.ticks_us()
+    while echo.value() == 0:
+        zacatek = ticks_us()
     
-    pulse_duration = utime.ticks_diff(pulse_end, pulse_start)
-    distance = pulse_duration / 58  # Vzdálenost ve cm (rychlost zvuku ve vzduchu je přibližně 343 m/s)
+    while echo.value() == 1:
+        konec = ticks_us()
+    distance = ((konec - zacatek) * rychlost_zvuku) / 2
     
+    print("Vzdalenost:", distance)  # Přidáno logování
     return distance
 
 # Funkce pro otočení krokového motoru o 90 stupňů
@@ -41,29 +46,45 @@ def rotate_motor_90_degrees():
         for halfstep in range(8):
             for pin, value in zip(motor_pins, step_sequence[halfstep]):
                 pin.value(value)
-            utime.sleep_us(1000)  # Zpoždění mezi kroky
+            sleep_us(1000)  # Zpoždění mezi kroky
 
 # Funkce pro aktualizaci mapy na základě dat z ultrazvukového čidla
 def update_map(distance, angle_degrees):
     global room_map, robot_position, robot_angle_degrees
-    
+
     # Převod úhlů na radiány
     angle_rad = math.radians(robot_angle_degrees + angle_degrees)
-    
+
     # Vypočet nové pozice na mapě
     new_x = robot_position[0] + int(distance * math.cos(angle_rad) / 10)  # 10 cm za jednotku
     new_y = robot_position[1] + int(distance * math.sin(angle_rad) / 10)  # 10 cm za jednotku
-    
+
     # Aktualizace mapy
     room_map[new_x, new_y] = 1  # Značíme buňku jako překážku
-    
+
     # Aktualizace pozice vozítka
     robot_position = (new_x, new_y)
 
+    # Výpis výsledné mapy
+    print_map()
+
+# Funkce pro výpis celé mapy
+def print_map():
+    for y in range(-10, 11):
+        for x in range(-10, 11):
+            if (x, y) == robot_position:
+                print("R", end=' ')  # Aktuální pozice vozítka
+            elif (x, y) in room_map:
+                print("1", end=' ')  # Překážka
+            else:
+                print("0", end=' ')  # Volný prostor
+        print()
 # Funkce pro uložení mapy do souboru
 def save_map(filename):
     with open(filename, 'w') as file:
         json.dump(room_map, file)
+
+    print("Mapa ulozena do souboru:", filename)  # Přidáno logování
 
 # Funkce pro načtení nové pozice vozítka ze sdíleného souboru
 def get_new_robot_position(filename):
