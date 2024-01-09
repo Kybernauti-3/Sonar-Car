@@ -6,6 +6,7 @@ import led
 import signalled as sl
 
 led.BLIK()  # Proč ne, že? ;)
+sl.shine()
 
 # Inicializace GPIO piny pro krokový motor
 motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), machine.Pin(4, machine.Pin.OUT), machine.Pin(5, machine.Pin.OUT)]
