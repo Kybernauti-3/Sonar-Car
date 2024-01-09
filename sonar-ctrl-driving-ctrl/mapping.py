@@ -3,6 +3,7 @@ from utime import sleep, sleep_us, ticks_us
 import math
 import json
 import led
+import signalled as sl
 
 led.BLIK()  # Proč ne, že? ;)
 
