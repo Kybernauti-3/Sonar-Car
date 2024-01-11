@@ -29,8 +29,8 @@ def get_distance():
     sleep_us(10)
     trigger.low()
     
-    zacatek = 0  # Define zacatek before the loops
-    konec = 0  # Define konec before the loops
+    zacatek = 0
+    konec = 0 
     
     while echo.value() == 0:
         zacatek = ticks_us()
@@ -39,7 +39,7 @@ def get_distance():
         konec = ticks_us()
     distance = ((konec - zacatek) * rychlost_zvuku) / 2
     
-    print("Vzdalenost:", distance)  # Přidáno logování
+    print("Vzdalenost:", distance)
     return distance
 
 # Funkce pro otočení krokového motoru o 90 stupňů
