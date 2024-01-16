@@ -25,6 +25,15 @@ def fialova():
   green.value(0)
   red.value(1)
 
+def tyrkys():
+  blue.value(1)
+  green.value(1)
+  red.value(0)
+
+def redgreen():
+  blue.value(0)
+  green.value(1)
+  red.value(1)
 
 def zhasnout():
   blue.value(0)
@@ -36,7 +45,7 @@ def shine():
   green.value(1)
   red.value(1)
 
-"""
+
 while True:
 
     shine()
@@ -59,8 +68,14 @@ while True:
     print("4")
     time.sleep(1)
 
+    tyrkys()
+    print("5")
+    time.sleep(1)
+
+    redgreen()
+    print("6")
+    time.sleep(1)
+
     zhasnout()
     print("off")
     time.sleep(1)
-
-    """
