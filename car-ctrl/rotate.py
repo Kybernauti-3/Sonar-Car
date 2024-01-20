@@ -1,60 +1,180 @@
 import machine
 import utime
 
-# Nastavení pinů pro H-můstek
-IN1_PIN = 0
-IN2_PIN = 1
-IN3_PIN = 2
-IN4_PIN = 3
-EN1_PIN = 20
-EN2_PIN = 21
+# Nastavení pinů pro první H-můstek
+IN1_PIN_1 = 0
+IN2_PIN_1 = 1
+IN3_PIN_1 = 2
+IN4_PIN_1 = 3
 
-# Inicializace pinů
-IN1 = machine.Pin(IN1_PIN, machine.Pin.OUT)
-IN2 = machine.Pin(IN2_PIN, machine.Pin.OUT)
-IN3 = machine.Pin(IN3_PIN, machine.Pin.OUT)
-IN4 = machine.Pin(IN4_PIN, machine.Pin.OUT)
-EN1 = machine.PWM(machine.Pin(EN1_PIN))
-EN2 = machine.PWM(machine.Pin(EN2_PIN))
+# Inicializace pinů pro první H-můstek
+IN1_1 = machine.Pin(IN1_PIN_1, machine.Pin.OUT)
+IN2_1 = machine.Pin(IN2_PIN_1, machine.Pin.OUT)
+IN3_1 = machine.Pin(IN3_PIN_1, machine.Pin.OUT)
+IN4_1 = machine.Pin(IN4_PIN_1, machine.Pin.OUT)
+
+# Nastavení pinů pro druhý H-můstek
+IN1_PIN_2 = 4
+IN2_PIN_2 = 5
+IN3_PIN_2 = 6
+IN4_PIN_2 = 7
+
+# Inicializace pinů pro druhý H-můstek
+IN1_2 = machine.Pin(IN1_PIN_2, machine.Pin.OUT)
+IN2_2 = machine.Pin(IN2_PIN_2, machine.Pin.OUT)
+IN3_2 = machine.Pin(IN3_PIN_2, machine.Pin.OUT)
+IN4_2 = machine.Pin(IN4_PIN_2, machine.Pin.OUT)
 
 # Funkce pro pohyb vpřed
 def move_forward():
-    IN1.value(1)
-    IN2.value(0)
-    IN3.value(1)
-    IN4.value(0)
-    EN1.freq(1000)
-    EN2.freq(1000)
-    EN1.duty_u16(32768)
-    EN2.duty_u16(32768)
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(1)
+    IN4_2.value(0)
+
+    utime.sleep(2)
+    stop()
 
 # Funkce pro pohyb vzad
 def move_backward():
-    IN1.value(0)
-    IN2.value(1)
-    IN3.value(0)
-    IN4.value(1)
-    EN1.freq(1000)
-    EN2.freq(1000)
-    EN1.duty_u16(32768)
-    EN2.duty_u16(32768)
+    IN1_1.value(0)
+    IN2_1.value(1)
+    IN3_1.value(0)
+    IN4_1.value(1)
+
+    IN1_2.value(0)
+    IN2_2.value(1)
+    IN3_2.value(0)
+    IN4_2.value(1)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro pohyb doleva
+def move_left():
+    IN1_1.value(0)
+    IN2_1.value(1)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(0)
+    IN4_2.value(1)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro pohyb doprava
+def move_right():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(0)
+    IN4_1.value(1)
+
+    IN1_2.value(0)
+    IN2_2.value(1)
+    IN3_2.value(1)
+    IN4_2.value(0)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doprava vpřed
+def move_diagonal_forward_right():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(0)
+    IN4_1.value(1)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(1)
+    IN4_2.value(0)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doprava vzad
+def move_diagonal_backward_right():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(0)
+    IN2_2.value(1)
+    IN3_2.value(0)
+    IN4_2.value(1)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doleva vpřed
+def move_diagonal_forward_left():
+    IN1_1.value(0)
+    IN2_1.value(1)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(0)
+    IN2_2.value(1)
+    IN3_2.value(0)
+    IN4_2.value(1)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doleva vzad
+def move_diagonal_backward_left():
+    IN1_1.value(0)
+    IN2_1.value(1)
+    IN3_1.value(0)
+    IN4_1.value(1)
+
+    IN1_2.value(0)
+    IN2_2.value(1)
+    IN3_2.value(1)
+    IN4_2.value(0)
+
+    utime.sleep(2)
+    stop()
 
 # Funkce pro zastavení
 def stop():
-    IN1.value(0)
-    IN2.value(0)
-    IN3.value(0)
-    IN4.value(0)
-    EN1.deinit()
-    EN2.deinit()
+    IN1_1.value(0)
+    IN2_1.value(0)
+    IN3_1.value(0)
+    IN4_1.value(0)
 
-# Ovládání motorů
+    IN1_2.value(0)
+    IN2_2.value(0)
+    IN3_2.value(0)
+    IN4_2.value(0)
+
+# Ovládání vozidla
 while True:
     try:
         move_forward()
         utime.sleep(2)
         move_backward()
         utime.sleep(2)
-        stop()
+        move_left()
+        utime.sleep(2)
+        move_right()
+        utime.sleep(2)
+        move_diagonal_forward_right()
+        utime.sleep(2)
+        move_diagonal_forward_left()
+        utime.sleep(2)
+        move_diagonal_backward_left()
+        utime.sleep(2)
+        move_diagonal_backward_right()
+        utime.sleep(2)
     except KeyboardInterrupt:
         stop()
