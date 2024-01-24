@@ -54,20 +54,42 @@ def rotate_motor_90_degrees():
 def update_map(distance, angle_degrees):
     global room_map, robot_position, robot_angle_degrees
 
-    # Převod úhlů na radiány
+    # Convert angles to radians
     angle_rad = math.radians(robot_angle_degrees + angle_degrees)
 
-    # Vypočet nové pozice na mapě
-    new_x = robot_position[0] + int(distance * math.cos(angle_rad) / 10)  # 10 cm za jednotku
-    new_y = robot_position[1] + int(distance * math.sin(angle_rad) / 10)  # 10 cm za jednotku
+    # Calculate new position on the map
+    new_x = robot_position[0] + int(distance * math.cos(angle_rad) / 10)  # 10 cm per unit
+    new_y = robot_position[1] + int(distance * math.sin(angle_rad) / 10)  # 10 cm per unit
 
-    # Aktualizace mapy
-    room_map[new_x, new_y] = 1  # Značíme buňku jako překážku
+    # Draw a line from the current position to the new position
+    x1, y1 = robot_position
+    x2, y2 = new_x, new_y
 
-    # Aktualizace pozice vozítka
+    dx = abs(x2 - x1)
+    dy = abs(y2 - y1)
+    sx = 1 if x1 < x2 else -1
+    sy = 1 if y1 < y2 else -1
+    err = dx - dy
+
+    while True:
+        # Mark the cell as an obstacle
+        room_map[x1, y1] = 1
+
+        if x1 == x2 and y1 == y2:
+            break
+
+        e2 = 2 * err
+        if e2 > -dy:
+            err -= dy
+            x1 += sx
+        if e2 < dx:
+            err += dx
+            y1 += sy
+
+    # Update robot position
     robot_position = (new_x, new_y)
 
-    # Výpis výsledné mapy
+    # Display the updated map
     print_map()
 
 # Funkce pro výpis celé mapy
@@ -75,12 +97,13 @@ def print_map():
     for y in range(-10, 11):
         for x in range(-10, 11):
             if (x, y) == robot_position:
-                print("R", end=' ')  # Aktuální pozice vozítka
+                print("R", end=' ')  # Current robot position
             elif (x, y) in room_map:
-                print("1", end=' ')  # Překážka
+                print("1", end=' ')  # Obstacle
             else:
-                print("0", end=' ')  # Volný prostor
+                print("0", end=' ')  # Free space
         print()
+
 # Funkce pro uložení mapy do souboru
 def save_map(filename):
     with open(filename, 'w') as file:
