@@ -176,5 +176,6 @@ while True:
         utime.sleep(2)
         move_diagonal_backward_right()
         utime.sleep(2)
+        stop()
     except KeyboardInterrupt:
         stop()
