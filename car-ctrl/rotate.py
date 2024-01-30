@@ -26,7 +26,7 @@ IN3_2 = machine.Pin(IN3_PIN_2, machine.Pin.OUT)
 IN4_2 = machine.Pin(IN4_PIN_2, machine.Pin.OUT)
 
 # Funkce pro pohyb vpřed
-def move_forward():
+def move_left():
     IN1_1.value(1)
     IN2_1.value(0)
     IN3_1.value(1)
@@ -41,7 +41,7 @@ def move_forward():
     stop()
 
 # Funkce pro pohyb vzad
-def move_backward():
+def move_right():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(0)
@@ -56,7 +56,7 @@ def move_backward():
     stop()
 
 # Funkce pro pohyb doleva
-def move_left():
+def move_forward():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(1)
@@ -71,7 +71,7 @@ def move_left():
     stop()
 
 # Funkce pro pohyb doprava
-def move_right():
+def move_backward():
     IN1_1.value(1)
     IN2_1.value(0)
     IN3_1.value(0)
@@ -157,16 +157,26 @@ def stop():
     IN3_2.value(0)
     IN4_2.value(0)
 
+
+move_forward()
+utime.sleep(2)
+move_backward()
+
 # Ovládání vozidla
+"""
 while True:
     try:
         move_forward()
+        print("1")
         utime.sleep(2)
         move_backward()
+        print("2")
         utime.sleep(2)
         move_left()
+        print("3")
         utime.sleep(2)
         move_right()
+        print("4")
         utime.sleep(2)
         move_diagonal_forward_right()
         utime.sleep(2)
@@ -179,3 +189,4 @@ while True:
         stop()
     except KeyboardInterrupt:
         stop()
+"""
