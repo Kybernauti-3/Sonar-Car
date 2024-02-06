@@ -45,7 +45,7 @@ def shine():
   green.value(1)
   red.value(1)
 
-
+"""
 while True:
 
     shine()
@@ -79,3 +79,4 @@ while True:
     zhasnout()
     print("off")
     time.sleep(1)
+"""
