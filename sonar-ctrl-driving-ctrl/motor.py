@@ -1,23 +1,31 @@
 import machine
-from utime import sleep, sleep_us, ticks_us
-
+from utime import sleep_us
 
 motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), machine.Pin(4, machine.Pin.OUT), machine.Pin(5, machine.Pin.OUT)]
 step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
-robot_angle_degrees = 0  # Aktuální úhel vozítka (0 stupňů je směr nahoru)
-
 
 def rotate_motor_90_degrees():
-    for i in range(512):
+    steps_per_90_degrees = 128  # Adjust this value according to your motor and setup
+    for _ in range(steps_per_90_degrees):
         for halfstep in range(8):
             for pin, value in zip(motor_pins, step_sequence[halfstep]):
                 pin.value(value)
-            sleep_us(1000) 
+            sleep_us(1000)
 
-for i in range(4):  # 4 zastávky o 90 stupních
-        for angle_degrees in range(0, 360, 5):  # Postupné otáčení
-            rotate_motor_90_degrees()
-        
-        # Po každé zastávce otočte vozítko o 90 stupňů
-        rotate_motor_90_degrees()
-        robot_angle_degrees += 10
+def pause_for_1_second():
+    sleep_us(1000000)
+
+def reset_motor_pins():
+    for pin in motor_pins:
+        pin.value(0)
+
+# Continuous rotation
+while True:
+    # Rotate the motor by 90 degrees
+    rotate_motor_90_degrees()
+
+    # Reset all motor pins to 0
+    reset_motor_pins()
+
+    # Pause for 1 second
+    pause_for_1_second()
