@@ -42,13 +42,19 @@ def get_distance():
     print("Vzdalenost:", distance)
     return distance
 
+def reset_motor_pins():
+    for pin in motor_pins:
+        pin.value(0)
+
 # Funkce pro otočení krokového motoru o 90 stupňů
 def rotate_motor_90_degrees():
-    for i in range(512):
+    steps_per_90_degrees = 128  # Adjust this value according to your motor and setup
+    for _ in range(steps_per_90_degrees):
         for halfstep in range(8):
             for pin, value in zip(motor_pins, step_sequence[halfstep]):
                 pin.value(value)
-            sleep_us(1000)  # Zpoždění mezi kroky
+            sleep_us(1000)
+    reset_motor_pins()
 
 # Funkce pro aktualizaci mapy na základě dat z ultrazvukového čidla
 def update_map(distance, angle_degrees):
@@ -130,10 +136,6 @@ try:
             rotate_motor_90_degrees()
             distance = get_distance()
             update_map(distance, angle_degrees)
-        
-        # Po každé zastávce otočte vozítko o 90 stupňů
-        rotate_motor_90_degrees()
-        robot_angle_degrees += 90
 
     # Uložení mapy po každém mapovacím cyklu
     save_map("room_map.json")
