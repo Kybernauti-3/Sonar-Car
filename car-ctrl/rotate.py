@@ -25,36 +25,6 @@ IN2_2 = machine.Pin(IN2_PIN_2, machine.Pin.OUT)
 IN3_2 = machine.Pin(IN3_PIN_2, machine.Pin.OUT)
 IN4_2 = machine.Pin(IN4_PIN_2, machine.Pin.OUT)
 
-# Funkce pro pohyb vpřed
-def move_left():
-    IN1_1.value(1)
-    IN2_1.value(0)
-    IN3_1.value(1)
-    IN4_1.value(0)
-
-    IN1_2.value(1)
-    IN2_2.value(0)
-    IN3_2.value(1)
-    IN4_2.value(0)
-
-    utime.sleep(2)
-    stop()
-
-# Funkce pro pohyb vzad
-def move_right():
-    IN1_1.value(0)
-    IN2_1.value(1)
-    IN3_1.value(0)
-    IN4_1.value(1)
-
-    IN1_2.value(0)
-    IN2_2.value(1)
-    IN3_2.value(0)
-    IN4_2.value(1)
-
-    utime.sleep(2)
-    stop()
-
 # Funkce pro pohyb doleva
 def move_forward():
     IN1_1.value(0)
@@ -85,10 +55,10 @@ def move_backward():
     utime.sleep(2)
     stop()
 
-# Funkce pro diagonální pohyb doprava vpřed
-def move_diagonal_forward_right():
-    IN1_1.value(1)
-    IN2_1.value(0)
+# Funkce pro pohyb doleva
+def move_left():
+    IN1_1.value(0)
+    IN2_1.value(1)
     IN3_1.value(0)
     IN4_1.value(1)
 
@@ -100,8 +70,8 @@ def move_diagonal_forward_right():
     utime.sleep(2)
     stop()
 
-# Funkce pro diagonální pohyb doprava vzad
-def move_diagonal_backward_right():
+# Funkce pro pohyb doprava
+def move_right():
     IN1_1.value(1)
     IN2_1.value(0)
     IN3_1.value(1)
@@ -115,17 +85,47 @@ def move_diagonal_backward_right():
     utime.sleep(2)
     stop()
 
-# Funkce pro diagonální pohyb doleva vpřed
-def move_diagonal_forward_left():
+# Funkce pro diagonální pohyb doprava vpřed
+def move_diagonal_forward_right():
     IN1_1.value(0)
     IN2_1.value(1)
-    IN3_1.value(1)
-    IN4_1.value(0)
+    IN3_1.value(0)
+    IN4_1.value(1)
 
     IN1_2.value(0)
     IN2_2.value(1)
     IN3_2.value(0)
     IN4_2.value(1)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doprava vzad
+def move_diagonal_backward_right():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(1)
+    IN4_2.value(0)
+
+    utime.sleep(2)
+    stop()
+
+# Funkce pro diagonální pohyb doleva vpřed
+def move_diagonal_forward_left():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(1)
+    IN4_1.value(0)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(1)
+    IN4_2.value(0)
 
     utime.sleep(2)
     stop()
@@ -139,11 +139,12 @@ def move_diagonal_backward_left():
 
     IN1_2.value(0)
     IN2_2.value(1)
-    IN3_2.value(1)
-    IN4_2.value(0)
+    IN3_2.value(0)
+    IN4_2.value(1)
 
     utime.sleep(2)
     stop()
+
 
 # Funkce pro zastavení
 def stop():
@@ -161,22 +162,21 @@ def stop():
 move_forward()
 utime.sleep(2)
 move_backward()
+utime.sleep(2)
+move_left()
+utime.sleep(2)
+move_right()
+utime.sleep(2)
 
-# Ovládání vozidla
-"""
 while True:
     try:
         move_forward()
-        print("1")
         utime.sleep(2)
         move_backward()
-        print("2")
         utime.sleep(2)
         move_left()
-        print("3")
         utime.sleep(2)
         move_right()
-        print("4")
         utime.sleep(2)
         move_diagonal_forward_right()
         utime.sleep(2)
@@ -186,7 +186,5 @@ while True:
         utime.sleep(2)
         move_diagonal_backward_right()
         utime.sleep(2)
-        stop()
     except KeyboardInterrupt:
         stop()
-"""
