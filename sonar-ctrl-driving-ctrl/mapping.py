@@ -39,7 +39,7 @@ def get_distance():
         konec = ticks_us()
     distance = ((konec - zacatek) * rychlost_zvuku) / 2
     
-    print("Vzdalenost:", distance)
+    print("Vzdalenost:", distance, " cm")
     return distance
 
 def reset_motor_pins():
