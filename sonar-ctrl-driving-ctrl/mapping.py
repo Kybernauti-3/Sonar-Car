@@ -2,10 +2,8 @@ import machine
 from utime import sleep, sleep_us, ticks_us
 import math
 import json
-import led
 import signalled as sl
 
-led.BLIK()  # Proč ne, že? ;)
 sl.shine()
 
 # Inicializace GPIO piny pro krokový motor
@@ -23,6 +21,8 @@ def get_distance():
     echo = machine.Pin(20, machine.Pin.IN)
     rychlost_zvuku = 0.0343
 
+    sl.modra()
+
     trigger.low()
     sleep_us(20)
     trigger.high()
@@ -39,7 +39,11 @@ def get_distance():
         konec = ticks_us()
     distance = ((konec - zacatek) * rychlost_zvuku) / 2
     
-    print("Vzdalenost:", distance, " cm")
+    print("Vzdalenost:", round(distance, 1), " cm")
+
+    sleep(0.5)
+    sl.zhasnout()
+
     return distance
 
 def reset_motor_pins():
@@ -48,6 +52,9 @@ def reset_motor_pins():
 
 # Funkce pro otočení krokového motoru o 90 stupňů
 def rotate_motor_90_degrees():
+
+    sl.zelena()
+
     steps_per_90_degrees = 128  # Adjust this value according to your motor and setup
     for _ in range(steps_per_90_degrees):
         for halfstep in range(8):
@@ -55,6 +62,7 @@ def rotate_motor_90_degrees():
                 pin.value(value)
             sleep_us(1000)
     reset_motor_pins()
+    sl.zhasnout()
 
 # Funkce pro aktualizaci mapy na základě dat z ultrazvukového čidla
 def update_map(distance, angle_degrees):
@@ -96,7 +104,7 @@ def update_map(distance, angle_degrees):
     robot_position = (new_x, new_y)
 
     # Display the updated map
-    print_map()
+    #print_map()
 
 # Funkce pro výpis celé mapy
 def print_map():
@@ -137,25 +145,25 @@ try:
             distance = get_distance()
             update_map(distance, angle_degrees)
 
-    # Uložení mapy po každém mapovacím cyklu
-    save_map("room_map.json")
+        # Uložení mapy po každém mapovacím cyklu
+        save_map("room_map.json")
 
-    # Zde můžete periodicky číst novou pozici vozítka ze sdíleného souboru
-    while True:
-        new_position = get_new_robot_position(shared_filename)
-        if new_position:
-            robot_position = new_position
+        # Zde můžete periodicky číst novou pozici vozítka ze sdíleného souboru
+        while True:
+            new_position = get_new_robot_position(shared_filename)
+            if new_position:
+                robot_position = new_position
 
-        # Výpis výsledné mapy
-        for y in range(-10, 11):
-            for x in range(-10, 11):
-                if (x, y) == robot_position:
-                    print("R", end=' ')  # Aktuální pozice vozítka
-                elif (x, y) in room_map:
-                    print("1", end=' ')  # Překážka
-                else:
-                    print("0", end=' ')  # Volný prostor
-            print()
+            # Výpis výsledné mapy
+            for y in range(-10, 11):
+                for x in range(-10, 11):
+                    if (x, y) == robot_position:
+                        print("R", end=' ')  # Aktuální pozice vozítka
+                    elif (x, y) in room_map:
+                        print("1", end=' ')  # Překážka
+                    else:
+                        print("0", end=' ')  # Volný prostor
+                print()
 
 finally:
     # Vypnutí motoru a uvolnění GPIO pinů
