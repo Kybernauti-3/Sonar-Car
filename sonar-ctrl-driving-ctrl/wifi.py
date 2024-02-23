@@ -1,15 +1,18 @@
-ssid = "D31-lab"
-key = "IoT.SPSE.lab22"
+#ssid = "D31-lab"
+#key = "IoT.SPSE.lab22"
+import network
+
+ssid = "Raspberry"
+key = "rpipico123"
 
 def do_connect():
-    import network
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
     if not wlan.isconnected():
-        print('connecting to network...')
+        print('Connecting to WiFi...')
         wlan.connect(ssid, key)
         while not wlan.isconnected():
             pass
-    print('network config:', wlan.ifconfig())
+    print('Network config:', wlan.ifconfig())
 
 do_connect()

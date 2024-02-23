@@ -1,49 +1,49 @@
 from machine import Pin
 import time
 
-red = Pin(9, Pin.OUT)
-green = Pin(10, Pin.OUT)
-blue = Pin(11, Pin.OUT)
+redled = Pin(9, Pin.OUT)
+greenled = Pin(10, Pin.OUT)
+blueled = Pin(11, Pin.OUT)
 
-def cervena():
-  blue.value(0)
-  green.value(0)
-  red.value(1)
+def red():
+  blueled.value(0)
+  greenled.value(0)
+  redled.value(1)
 
-def zelena():
-  blue.value(0)
-  green.value(1)
-  red.value(0)
+def green():
+  blueled.value(0)
+  greenled.value(1)
+  redled.value(0)
 
-def modra():
-  blue.value(1)
-  green.value(0)
-  red.value(0)
+def blue():
+  blueled.value(1)
+  greenled.value(0)
+  redled.value(0)
 
-def fialova():
-  blue.value(1)
-  green.value(0)
-  red.value(1)
+def purple():
+  blueled.value(1)
+  greenled.value(0)
+  redled.value(1)
 
 def tyrkys():
-  blue.value(1)
-  green.value(1)
-  red.value(0)
+  blueled.value(1)
+  greenled.value(1)
+  redled.value(0)
 
 def redgreen():
-  blue.value(0)
-  green.value(1)
-  red.value(1)
+  blueled.value(0)
+  greenled.value(1)
+  redled.value(1)
 
-def zhasnout():
-  blue.value(0)
-  green.value(0)
-  red.value(0)
+def off():
+  blueled.value(0)
+  greenled.value(0)
+  redled.value(0)
 
 def shine():
-  blue.value(1)
-  green.value(1)
-  red.value(1)
+  blueled.value(1)
+  greenled.value(1)
+  redled.value(1)
 
 """
 while True:
@@ -52,7 +52,7 @@ while True:
     print("shine")
     time.sleep(1)
 
-    cervena()
+    red()
     print("1")
     time.sleep(1)
 
@@ -72,7 +72,7 @@ while True:
     print("5")
     time.sleep(1)
 
-    redgreen()
+    redledgreenled()
     print("6")
     time.sleep(1)
 
