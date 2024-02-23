@@ -44,10 +44,8 @@ def get_distance():
     
     print("Vzdalenost:", round(distance, 1), " cm")
 
-    try:
-        mqqt_send(str(round(distance,2)))
-    finally:
-        pass
+    mqqt_send(str(round(distance,2)))
+
 
     sleep(0.5)
     sl.off()
@@ -70,7 +68,6 @@ def rotate_sonar():
     reset_motor_pins()
     sl.off()
 
-# Funkce pro aktualizaci mapy na základě naměřené vzdálenosti od překážek
 # Funkce pro aktualizaci mapy na základě naměřené vzdálenosti od překážek
 def update_map(distance):
     car_position = (map_width // 2, map_height // 2)
@@ -117,18 +114,19 @@ def connect_mqtt():
 mqtt_client = connect_mqtt()
 
 def mqqt_send(data):
-    mqtt_client.publish(MQTT_TOPIC, data)
+    try:
+        mqtt_client.publish(MQTT_TOPIC, data)
+    except Exception as e:
+        print("Chyba při odesílání zprávy na MQTT server:", e)
 
 
 # Hlavní smyčka programu
 try:
     while True:
-        # Zde můžete implementovat volání funkcí pro měření vzdálenosti, aktualizaci mapy a otáčení sonaru
-        distance = get_distance()  # Získání vzdálenosti od překážek
-        update_map(distance)       # Aktualizace mapy na základě naměřené vzdálenosti
-        rotate_sonar()             # Otáčení sonaru pro pokrytí celého okolí
-                
-        # Každé 4. měření vypíšeme obsah mapy
+        distance = get_distance()
+        update_map(distance)
+        rotate_sonar()
+
         measurement_count += 1
         if measurement_count % 4 == 0:
             #print("Map:")

@@ -1,6 +1,6 @@
+import network
 #ssid = "D31-lab"
 #key = "IoT.SPSE.lab22"
-import network
 
 ssid = "Raspberry"
 key = "rpipico123"
