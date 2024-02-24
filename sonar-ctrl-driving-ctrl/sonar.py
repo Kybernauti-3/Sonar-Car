@@ -131,6 +131,7 @@ try:
             #print("Map:")
             for row in room_map:
                 print(row)
+            measurement_count = 0
         
         sleep(0.7)
 except KeyboardInterrupt:
