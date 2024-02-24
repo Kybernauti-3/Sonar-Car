@@ -4,6 +4,7 @@ import signalled as sl
 from umqtt.simple import MQTTClient
 
 MQTT_BROKER = "broker.emqx.io"
+#MQTT_BROKER = "broker.hivemq.com"
 MQTT_TOPIC = "sonar"
 
 # Definice pinů
@@ -42,12 +43,11 @@ def get_distance():
         
     distance = ((end - start) * 0.0343) / 2
     
-    print("Vzdalenost:", round(distance, 1), " cm")
+    print("Vzdalenost:", round(distance, 1), "cm")
 
     mqqt_send(str(round(distance,2)))
 
-
-    sleep(0.5)
+    sleep(0.3)
     sl.off()
 
     return distance
@@ -104,6 +104,7 @@ def calculate_sensor_position(car_position):
     return sensor_position
 
 def connect_mqtt():
+    print("Connecting to MQTT Broker")
     client = MQTTClient("pico", MQTT_BROKER)
     client.connect()
     
@@ -111,17 +112,15 @@ def connect_mqtt():
     
     return client
 
-mqtt_client = connect_mqtt()
-
 def mqqt_send(data):
     try:
         mqtt_client.publish(MQTT_TOPIC, data)
     except Exception as e:
         print("Chyba při odesílání zprávy na MQTT server:", e)
 
-
 # Hlavní smyčka programu
 try:
+    mqtt_client = connect_mqtt()
     while True:
         distance = get_distance()
         update_map(distance)
@@ -133,9 +132,9 @@ try:
             for row in room_map:
                 print(row)
         
-        sleep_us(500000)
+        sleep(0.7)
 except KeyboardInterrupt:
     # Nastavení všech motorových pinů na hodnotu 0
     reset_motor_pins()
     sl.off()
-    print("Motors reset \nLED reset")
+    print("Motors reset \nLED off")
