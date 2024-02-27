@@ -17,7 +17,7 @@ https://www.laskakit.cz/h-mustek-radic-l9110s/
 
 https://www.laskakit.cz/krokovy-motor-28byj-48/
 
-Omniwheels
+Mecanum Omni Wheels
 
 Drátování
 
