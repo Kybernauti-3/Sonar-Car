@@ -116,11 +116,11 @@ def mqqt_send(data):
     try:
         mqtt_client.publish(MQTT_TOPIC, data)
     except Exception as e:
-        print("Chyba při odesílání zprávy na MQTT server:", e)
+        print("Chyba pri odesilani na MQTT:", e)
 
 # Hlavní smyčka programu
 try:
-    mqtt_client = connect_mqtt()
+    #mqtt_client = connect_mqtt()
     while True:
         distance = get_distance()
         update_map(distance)
@@ -136,6 +136,11 @@ try:
         sleep(0.7)
 except KeyboardInterrupt:
     # Nastavení všech motorových pinů na hodnotu 0
+    reset_motor_pins()
+    sl.off()
+    print("Motors reset \nLED off")
+except Exception as e:
+    print("Chyba:", e)
     reset_motor_pins()
     sl.off()
     print("Motors reset \nLED off")
