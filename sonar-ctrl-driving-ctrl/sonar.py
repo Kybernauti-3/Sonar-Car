@@ -93,23 +93,34 @@ def calculate_sensor_position(car_position):
    pass
 
 def connect_mqtt():
-    print("Connecting to MQTT Broker")
-    client = MQTTClient("pico", MQTT_BROKER)
-    client.connect()
+    try:
+        print("Pripojovani na MQTT")
+        client = MQTTClient("pico", MQTT_BROKER)
+        client.connect()
+        print("Pripojeno na MQTT")
+        return client
     
-    print("Connected to MQTT Broker")
+    except ConnectionError as e:
+        print("Connection error occurred:", e)
+        return None
     
-    return client
+    except Exception as e:
+        print("An error occurred:", e)
+        return None
 
 def mqqt_send(data):
     try:
-        mqtt_client.publish(MQTT_TOPIC, data)
+        if mqtt_client is not None:  # Ověření, zda mqtt_client není None
+            mqtt_client.publish(MQTT_TOPIC, data)
+        else:
+            print("MQTT klient není inicializován. Nelze odeslat zprávu.")
     except Exception as e:
-        print("Chyba pri odesilani na MQTT:", e)
+        print("Chyba při odesílání na MQTT:", e)
+
 
 # Hlavní smyčka programu
 try:
-    #mqtt_client = connect_mqtt()
+    mqtt_client = connect_mqtt() # pripojeni na mqtt
     room_grid = create_empty_room(room_length, room_width) # generace výchozí místnosti
     while True:
         distance = get_distance()
@@ -118,9 +129,8 @@ try:
 
         measurement_count += 1
         if measurement_count % 4 == 0:
-            #print("Map:")
-            for row in room_map:
-                print(row)
+            for row in room_grid:
+                print(' '.join(map(str, row)))
             measurement_count = 0
         
         sleep(0.7)
@@ -131,6 +141,10 @@ except KeyboardInterrupt:
     print("Motors reset \nLED off")
 except Exception as e:
     print("Chyba:", e)
+    reset_motor_pins()
+    sl.off()
+    print("Motor pins reset \nLED off")
+finally:
     reset_motor_pins()
     sl.off()
     print("Motor pins reset \nLED off")
