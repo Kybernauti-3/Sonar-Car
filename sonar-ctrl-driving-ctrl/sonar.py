@@ -84,6 +84,14 @@ def add_obstacle(room_grid, x, y):
     if 0 < x < len(room_grid) - 1 and 0 < y < len(room_grid[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
         room_grid[x][y] = 1
 
+def spawn_car(room_grid, x, y):
+    if 0 < x < len(room_grid) - 1 and 0 < y < len(room_grid[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
+        room_grid[x][y] = "S"
+        return x, y
+    else:
+        raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
+
+
 # Funkce pro aktualizaci mapy na základě naměřené vzdálenosti od překážek
 def update_map(distance):
     pass
@@ -91,6 +99,24 @@ def update_map(distance):
 # Funkce pro výpočet pozice, kam ukazuje senzor
 def calculate_sensor_position(car_position):
    pass
+
+def distance_to_coordinates(distance, car_position, sonar_orientation):
+    # Předpokládáme, že auto má polohu (x_car, y_car) a sonar má orientaci sonar_orientation (v stupních)
+    x_car, y_car = car_position
+    
+    # Převést orientaci sonaru na radiány
+    sonar_orientation_rad = sonar_orientation * (math.pi / 180)
+    
+    # Převod vzdálenosti na souřadnice v místnosti
+    x_distance = distance * math.cos(sonar_orientation_rad)
+    y_distance = distance * math.sin(sonar_orientation_rad)
+    
+    # Přidání vzdálenosti k aktuální poloze auta
+    x_sonar = x_car + x_distance
+    y_sonar = y_car + y_distance
+    
+    return round(x_sonar), round(y_sonar)
+
 
 def connect_mqtt():
     try:
@@ -122,6 +148,7 @@ def mqqt_send(data):
 try:
     mqtt_client = connect_mqtt() # pripojeni na mqtt
     room_grid = create_empty_room(room_length, room_width) # generace výchozí místnosti
+    spawn_car(room_grid, 5, 5) # prida auto do mistnosti
     while True:
         distance = get_distance()
         
