@@ -15,8 +15,8 @@ motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), 
 step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
 
 # velikost mapy
-room_length = 10
-room_width = 10
+room_length = 15
+room_width = 15
 
 # pomocná proměná
 measurement_count = 0
@@ -45,7 +45,7 @@ def get_distance():
     
     print("Vzdalenost:", round(distance, 1), "cm")
 
-    mqqt_send(str(round(distance,2)))
+    #mqqt_send(str(round(distance,2)))
 
     sleep(0.3)
     sl.off()
@@ -57,13 +57,8 @@ def reset_motor_pins():
     for pin in motor_pins:
         pin.value(0)
 
-smery = ["F", "L", "B", "R"]
-smer_index = 0  # Index aktuálního směru
-smer = "F"  # Přesunout definici mimo funkci rotate_sonar()
-
-def rotate_sonar():
-    global smer  # Definovat smer jako global pro možnost změny hodnoty
-    global smer_index
+smer = "F"
+def rotate_sonar(smer):
     sl.green()
     steps_per_90_degrees = 128  # Adjust this value according to your motor and setup
     for _ in range(steps_per_90_degrees):
@@ -73,10 +68,11 @@ def rotate_sonar():
             sleep_us(1000)
     reset_motor_pins()
     sl.off()
-    smer = smery[smer_index]
-    # Změna směru na další v cyklickém seznamu
-    smer_index = (smer_index + 1) % len(smery)
-    return smer
+    smery = ["F", "L", "B", "R"]
+    index = smery.index(smer)
+    novy_index = (index + 1) % len(smery)
+    return smery[novy_index]
+
 
 def create_empty_room(length, width):
     room_grid = [[0] * width for _ in range(length)]
@@ -106,7 +102,7 @@ def car_position():
                 x, y = i, j
                 return x, y  # Vrátíme nalezené souřadnice auta
     print("Car not found in the room.")
-    return 0,0
+    return 5,5
 
 def distance_to_map(distance, sonar_orientation):
     global room_grid  # Upravíme na global, abychom mohli pracovat s proměnnou room_grid
@@ -114,32 +110,37 @@ def distance_to_map(distance, sonar_orientation):
     # Získání pozice auta
     car_pos = car_position()
     x_car, y_car = car_pos
+    coord = round(int(distance / 10), 0)
+    print("Coord:", coord)
+
+    if coord == 0:
+        return
 
     # Vypočet nové pozice na základě orientace sonaru a naměřené vzdálenosti
     if sonar_orientation == "F":
-        x_sonar = x_car - int(distance / 10)
+        x_sonar = x_car - coord
         y_sonar = y_car
     elif sonar_orientation == "L":
         x_sonar = x_car
-        y_sonar = y_car - int(distance / 10)
+        y_sonar = y_car - coord
     elif sonar_orientation == "B":
-        x_sonar = x_car + int(distance / 10)
+        x_sonar = x_car + coord
         y_sonar = y_car
     elif sonar_orientation == "R":
         x_sonar = x_car
-        y_sonar = y_car + int(distance / 10)
+        y_sonar = y_car + coord
 
     # Přidání překážky do mapy
     if 0 < x_sonar < len(room_grid) - 1 and 0 < y_sonar < len(room_grid[0]) - 1:
         room_grid[x_sonar][y_sonar] = 1
     else:
-        print("Překážka se nachází mimo rozsah mapy.")
+        print("Prekazku nelze umistit na mapu.")
 
 def print_map(room_grid):
     print("Printing map")
     for row in room_grid:
         print(' '.join(map(str, row)))
-
+"""
 def connect_mqtt():
     try:
         print("Pripojovani na MQTT")
@@ -161,22 +162,23 @@ def mqqt_send(data):
         if mqtt_client is not None:  # Ověření, zda mqtt_client není None
             mqtt_client.publish(MQTT_TOPIC, data)
         else:
-            print("MQTT klient není inicializován. Nelze odeslat zprávu.")
+            print("MQTT klient neni inicializovan. Nelze odeslat zpravu.")
     except Exception as e:
-        print("Chyba při odesílání na MQTT:", e)
-
+        print("Chyba pri odesilani na MQTT:", e)
+"""
 # Hlavní smyčka programu
 try:
-    mqtt_client = connect_mqtt() # pripojeni na mqtt
+    #mqtt_client = connect_mqtt() # pripojeni na mqtt
     room_grid = create_empty_room(room_length, room_width) # generace výchozí místnosti
-    spawn_car(room_grid, 5, 5) # prida auto do mistnosti
+    spawn_car(room_grid, 7, 7) # prida auto do mistnosti
+    print("Initial map print")
+    print_map(room_grid)
     while True:
+        print()
         distance = get_distance()
-        
-        print(smer)
+        print("Smer: ", smer)
         distance_to_map(distance,smer)
-        smer = rotate_sonar()
-        print(smer)
+        smer = rotate_sonar(smer)
 
         measurement_count += 1
         if measurement_count % 4 == 0:
@@ -191,10 +193,6 @@ except KeyboardInterrupt:
     print("Motors reset \nLED off")
 except Exception as e:
     print("Chyba:", e)
-    reset_motor_pins()
-    sl.off()
-    print("Motor pins reset \nLED off")
-finally:
     reset_motor_pins()
     sl.off()
     print("Motor pins reset \nLED off")
