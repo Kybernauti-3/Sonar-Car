@@ -3,7 +3,6 @@ from time import sleep_us, ticks_us, sleep
 import SignalLED as sl
 from umqtt.simple import MQTTClient
 
-
 # mqtt broker jen tak pro posilani nejakeho infa i tam
 MQTT_BROKER = "broker.emqx.io"
 #MQTT_BROKER = "broker.hivemq.com"
@@ -109,7 +108,6 @@ def car_position():
     print("Car not found in the room.")
     return 0,0
 
-
 def distance_to_map(distance, sonar_orientation):
     global room_grid  # Upravíme na global, abychom mohli pracovat s proměnnou room_grid
 
@@ -166,7 +164,6 @@ def mqqt_send(data):
             print("MQTT klient není inicializován. Nelze odeslat zprávu.")
     except Exception as e:
         print("Chyba při odesílání na MQTT:", e)
-
 
 # Hlavní smyčka programu
 try:
