@@ -1,6 +1,6 @@
 import machine
 from time import sleep_us, ticks_us, sleep
-import signalled as sl
+import SignalLED as sl
 from umqtt.simple import MQTTClient
 
 
@@ -58,8 +58,13 @@ def reset_motor_pins():
     for pin in motor_pins:
         pin.value(0)
 
-# Funkce pro otáčení motoru o 90°
+smery = ["F", "L", "B", "R"]
+smer_index = 0  # Index aktuálního směru
+smer = "F"  # Přesunout definici mimo funkci rotate_sonar()
+
 def rotate_sonar():
+    global smer  # Definovat smer jako global pro možnost změny hodnoty
+    global smer_index
     sl.green()
     steps_per_90_degrees = 128  # Adjust this value according to your motor and setup
     for _ in range(steps_per_90_degrees):
@@ -69,6 +74,10 @@ def rotate_sonar():
             sleep_us(1000)
     reset_motor_pins()
     sl.off()
+    smer = smery[smer_index]
+    # Změna směru na další v cyklickém seznamu
+    smer_index = (smer_index + 1) % len(smery)
+    return smer
 
 def create_empty_room(length, width):
     room_grid = [[0] * width for _ in range(length)]
@@ -91,32 +100,47 @@ def spawn_car(room_grid, x, y):
     else:
         raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
 
+def car_position():
+    for i in range(len(room_grid)):
+        for j in range(len(room_grid[0])):
+            if room_grid[i][j] == "S":
+                x, y = i, j
+                return x, y  # Vrátíme nalezené souřadnice auta
+    print("Car not found in the room.")
+    return 0,0
 
-# Funkce pro aktualizaci mapy na základě naměřené vzdálenosti od překážek
-def update_map(distance):
-    pass
 
-# Funkce pro výpočet pozice, kam ukazuje senzor
-def calculate_sensor_position(car_position):
-   pass
+def distance_to_map(distance, sonar_orientation):
+    global room_grid  # Upravíme na global, abychom mohli pracovat s proměnnou room_grid
 
-def distance_to_coordinates(distance, car_position, sonar_orientation):
-    # Předpokládáme, že auto má polohu (x_car, y_car) a sonar má orientaci sonar_orientation (v stupních)
-    x_car, y_car = car_position
-    
-    # Převést orientaci sonaru na radiány
-    sonar_orientation_rad = sonar_orientation * (math.pi / 180)
-    
-    # Převod vzdálenosti na souřadnice v místnosti
-    x_distance = distance * math.cos(sonar_orientation_rad)
-    y_distance = distance * math.sin(sonar_orientation_rad)
-    
-    # Přidání vzdálenosti k aktuální poloze auta
-    x_sonar = x_car + x_distance
-    y_sonar = y_car + y_distance
-    
-    return round(x_sonar), round(y_sonar)
+    # Získání pozice auta
+    car_pos = car_position()
+    x_car, y_car = car_pos
 
+    # Vypočet nové pozice na základě orientace sonaru a naměřené vzdálenosti
+    if sonar_orientation == "F":
+        x_sonar = x_car - int(distance / 10)
+        y_sonar = y_car
+    elif sonar_orientation == "L":
+        x_sonar = x_car
+        y_sonar = y_car - int(distance / 10)
+    elif sonar_orientation == "B":
+        x_sonar = x_car + int(distance / 10)
+        y_sonar = y_car
+    elif sonar_orientation == "R":
+        x_sonar = x_car
+        y_sonar = y_car + int(distance / 10)
+
+    # Přidání překážky do mapy
+    if 0 < x_sonar < len(room_grid) - 1 and 0 < y_sonar < len(room_grid[0]) - 1:
+        room_grid[x_sonar][y_sonar] = 1
+    else:
+        print("Překážka se nachází mimo rozsah mapy.")
+
+def print_map(room_grid):
+    print("Printing map")
+    for row in room_grid:
+        print(' '.join(map(str, row)))
 
 def connect_mqtt():
     try:
@@ -152,12 +176,14 @@ try:
     while True:
         distance = get_distance()
         
-        rotate_sonar()
+        print(smer)
+        distance_to_map(distance,smer)
+        smer = rotate_sonar()
+        print(smer)
 
         measurement_count += 1
         if measurement_count % 4 == 0:
-            for row in room_grid:
-                print(' '.join(map(str, row)))
+            print_map(room_grid)
             measurement_count = 0
         
         sleep(0.7)

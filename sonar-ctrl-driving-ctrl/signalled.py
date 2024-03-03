@@ -1,5 +1,4 @@
 from machine import Pin
-import time
 
 redled = Pin(9, Pin.OUT)
 greenled = Pin(10, Pin.OUT)
