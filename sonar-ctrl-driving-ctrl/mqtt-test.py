@@ -1,6 +1,6 @@
 from umqtt.simple import MQTTClient
 
-MQTT_BROKER = "192.168.1.100"
+MQTT_BROKER = "broker.emqx.io"
 MQTT_TOPIC = "sonar"
 
 def connect_mqtt():
