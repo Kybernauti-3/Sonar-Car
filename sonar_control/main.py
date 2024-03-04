@@ -9,9 +9,9 @@ from machine import Pin
 from time import sleep
 
 # Define pins for the motor and sonar
-motor_pins = [Pin(13, Pin.OUT), Pin(12, Pin.OUT), Pin(14, Pin.OUT), Pin(27, Pin.OUT)]
-trigger_pin = Pin(33, Pin.OUT)
-echo_pin = Pin(32, Pin.IN)
+motor_pins = [Pin(2, Pin.OUT), Pin(3, Pin.OUT), Pin(4, Pin.OUT), Pin(5, Pin.OUT)]
+trigger_pin = Pin(21, Pin.OUT)
+echo_pin = Pin(20, Pin.IN)
 
 grid_size = 32		# Size of the grid (in points)
 point_distance = 20	# Distance between points in cm
@@ -27,10 +27,10 @@ def main():
 	scope.setAngle(0)
 	scope.setStepRatio(angle_per_step)
 	print("Check if the periscope is in home position (facing to the front)!")
-	print("Map is set to " + grid_size + "x" + grid_size + " grid with " + point_distance + " cm distance between points (" + grid_size*point_distance + "x" + grid_size*point_distance + " cm)")
+	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
 
 	while True:
-		for iterations in range(4):
+		for iterations in range(1):
 			for i in range(0, 360, 5):
 				scope.rotate(i)
 				sleep(0.1)

@@ -80,6 +80,10 @@ class periscope:
 					sleep_us(1000)
 		self.reset_motor_pins()
 
+	def reset_motor_pins(self):
+		for pin in self.motor_pins:
+			pin.value(0)
+
 	def setAngle(self, angle):
 		"""
 		Sets the angle of the periscope to the nearest angle value the periscope can be set to.
