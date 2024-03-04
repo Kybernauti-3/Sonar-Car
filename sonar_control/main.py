@@ -14,7 +14,7 @@ trigger_pin = Pin(21, Pin.OUT)
 echo_pin = Pin(20, Pin.IN)
 
 grid_size = 32		# Size of the grid (in points)
-point_distance = 20	# Distance between points in cm
+point_distance = 10	# Distance between points in cm
 
 # Create a periscope object
 scope = periscope.periscope(motor_pins, trigger_pin, echo_pin)
