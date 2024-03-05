@@ -21,7 +21,14 @@ scope = periscope.periscope(motor_pins, trigger_pin, echo_pin)
 
 map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
-angle_per_step = 1.42 # With the gearbox
+def spawn_car(room_grid, x, y):
+    if 0 < x < len(room_grid) - 1 and 0 < y < len(room_grid[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
+        room_grid[x][y] = "S"
+        return x, y
+    else:
+        raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
+
+angle_per_step = 12.9 # With the gearbox
 
 def main():
 	scope.setAngle(0)
@@ -35,14 +42,18 @@ def main():
 				scope.rotate(i)
 				sleep(0.1)
 				distance = scope.measure()
-				print("Angle: ", i, " Distance: ", distance)
+				print("Angle: ", str(i), " Distance: ", str(distance))
 				x,y = scope.getXY(distance)
 				x, y = int(x/point_distance), int(y/point_distance)
 				if x < grid_size and y < grid_size:
-					map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
-		print("Scan finished, iterations: ", iterations, ", Map: ")
+					try:
+						map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
+					except:
+						print("Out of range")
+		print("Scan finished, Map: ")
+		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
-			print(map_plane[i])
+			print(str(map_plane[i]))
 
 
 if __name__ == "__main__":
