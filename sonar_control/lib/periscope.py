@@ -2,6 +2,7 @@
 import machine
 from time import sleep_us, ticks_us
 import math
+import SignalLED as sl
 
 class periscope:
 
@@ -41,6 +42,7 @@ class periscope:
 			Returns:
 				float: The measured distance in centimeters.
 			"""
+			sl.blue()
 			self.trigger_pin.low()
 			sleep_us(20)
 			self.trigger_pin.high()
@@ -48,12 +50,16 @@ class periscope:
 			self.trigger_pin.low()
 			start = 0
 			end = 0
-			while self.echo_pin.value() == 0:
-				start = ticks_us()
-			while self.echo_pin.value() == 1:
-				end = ticks_us()
-			distance = (end - start) * 0.0343 / 2
-			return distance
+			try:
+				while self.echo_pin.value() == 0:
+					start = ticks_us()
+				while self.echo_pin.value() == 1:
+					end = ticks_us()
+				distance = (end - start) * 0.0343 / 2
+				return distance
+			except:
+				print("Something went wrong while measuring distance")
+				return
 	
 	def rotate(self, degrees):
 		"""
@@ -65,6 +71,7 @@ class periscope:
 		Returns:
 			None
 		"""
+		sl.green()
 		steps = int(degrees / self.angle_per_step)
 		self.angle = (self.angle + degrees) % 360
 		for _ in range(abs(steps)):

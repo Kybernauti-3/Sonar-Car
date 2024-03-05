@@ -1,10 +1,11 @@
 # Main program for the sonar control system
 # Draws 32 by 32 grid with walls and empty space
-# grid points will be 20 cm apart
+# grid points will be 10 cm apart
 # Point value will represent probability of wall, 0 - no wall, 100 - wall
 
 # Import necessary libraries
 import periscope
+import SignalLED as sl
 from machine import Pin
 from time import sleep
 
@@ -21,9 +22,9 @@ scope = periscope.periscope(motor_pins, trigger_pin, echo_pin)
 
 map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
-def spawn_car(room_grid, x, y):
-    if 0 < x < len(room_grid) - 1 and 0 < y < len(room_grid[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
-        room_grid[x][y] = "S"
+def spawn_car(map_plane, x, y):
+    if 0 < x < len(map_plane) - 1 and 0 < y < len(map_plane[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
+        map_plane[x][y] = "S"
         return x, y
     else:
         raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
@@ -33,7 +34,7 @@ angle_per_step = 22 # With the gearbox
 def main():
 	scope.setAngle(0)
 	scope.setStepRatio(angle_per_step)
-	print("Check if the periscope is in home position (facing to the front)!")
+	# print("Check if the periscope is in home position (facing to the front)!")
 	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
 
 	while True:
@@ -49,8 +50,9 @@ def main():
 					try:
 						map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
 					except:
-						print("Out of range")
-		print("Scan finished, Map: ")
+						print("Out of range, may be a sensor failure")
+		print("Scan finished. Printing map:")
+		sl.red()
 		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
 			print(str(map_plane[i]))
