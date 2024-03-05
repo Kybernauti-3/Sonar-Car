@@ -25,7 +25,7 @@ def vypocet_vzdalenosti():
         vzdalenost = ((konec - zacatek) * rychlost_zvuku) / 2
         print("Vzdalenost je: ", vzdalenost, " cm.")
     except:
-        print("Chyba")
+        print("Something went wrong while measuring distance")
 
 while True:
     vypocet_vzdalenosti()
