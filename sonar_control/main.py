@@ -56,6 +56,7 @@ def main():
 		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
 			print(str(map_plane[i]))
+		sleep(1)
 
 
 if __name__ == "__main__":
