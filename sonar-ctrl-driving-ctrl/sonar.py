@@ -3,11 +3,6 @@ from time import sleep_us, ticks_us, sleep
 import SignalLED as sl
 from umqtt.simple import MQTTClient
 
-# mqtt broker jen tak pro posilani nejakeho infa i tam
-MQTT_BROKER = "broker.emqx.io"
-#MQTT_BROKER = "broker.hivemq.com"
-MQTT_TOPIC = "sonar"
-
 # definování pinů na kterých jsou zapojene soucastky
 trigger_pin = machine.Pin(21, machine.Pin.OUT)
 echo_pin = machine.Pin(20, machine.Pin.IN)
@@ -15,8 +10,8 @@ motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), 
 step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
 
 # velikost mapy
-room_length = 15
-room_width = 15
+room_length = 30
+room_width = 30
 
 # pomocná proměná
 measurement_count = 0
@@ -140,35 +135,9 @@ def print_map(room_grid):
     print("Printing map")
     for row in room_grid:
         print(' '.join(map(str, row)))
-"""
-def connect_mqtt():
-    try:
-        print("Pripojovani na MQTT")
-        client = MQTTClient("pico", MQTT_BROKER)
-        client.connect()
-        print("Pripojeno na MQTT")
-        return client
-    
-    except ConnectionError as e:
-        print("Connection error occurred:", e)
-        return None
-    
-    except Exception as e:
-        print("An error occurred:", e)
-        return None
 
-def mqqt_send(data):
-    try:
-        if mqtt_client is not None:  # Ověření, zda mqtt_client není None
-            mqtt_client.publish(MQTT_TOPIC, data)
-        else:
-            print("MQTT klient neni inicializovan. Nelze odeslat zpravu.")
-    except Exception as e:
-        print("Chyba pri odesilani na MQTT:", e)
-"""
 # Hlavní smyčka programu
 try:
-    #mqtt_client = connect_mqtt() # pripojeni na mqtt
     room_grid = create_empty_room(room_length, room_width) # generace výchozí místnosti
     spawn_car(room_grid, 7, 7) # prida auto do mistnosti
     print("Initial map print")
