@@ -28,7 +28,7 @@ def spawn_car(room_grid, x, y):
     else:
         raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
 
-angle_per_step = 12.9 # With the gearbox
+angle_per_step = 22 # With the gearbox
 
 def main():
 	scope.setAngle(0)
