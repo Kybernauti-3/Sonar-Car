@@ -8,6 +8,7 @@ import periscope
 import SignalLED as sl
 from machine import Pin
 from time import sleep
+import mqtt
 
 # Define pins for the motor and sonar
 motor_pins = [Pin(2, Pin.OUT), Pin(3, Pin.OUT), Pin(4, Pin.OUT), Pin(5, Pin.OUT)]
@@ -56,6 +57,7 @@ def main():
 		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
 			print(str(map_plane[i]))
+		mqtt.mqqt_send(map_plane)
 		sleep(1)
 
 
