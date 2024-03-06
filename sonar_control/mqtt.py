@@ -49,3 +49,5 @@ def do_connect():
 do_connect()
 
 mqtt_client = connect_mqtt() # pripojeni na mqtt
+
+mqqt_send("Pico connected")
