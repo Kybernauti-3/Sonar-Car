@@ -58,6 +58,7 @@ def main():
 		for i in range(grid_size):
 			print(str(map_plane[i]))
 		mqtt.mqqt_send(map_plane)
+		print(map_plane)
 		sleep(1)
 
 
