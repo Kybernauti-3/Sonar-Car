@@ -4,7 +4,7 @@ from utime import sleep, sleep_us, ticks_us
 trigger = Pin(21, Pin.OUT)
 echo = Pin(20, Pin.IN)
 rychlost_zvuku = 0.0343
-
+print("ads")
 def vypocet_vzdalenosti():
     trigger.low()
     sleep_us(20)
