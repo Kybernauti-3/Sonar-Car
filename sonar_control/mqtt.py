@@ -1,5 +1,6 @@
 from umqtt.simple import MQTTClient
 import network
+import json
 
 MQTT_BROKER = "broker.emqx.io"
 #MQTT_BROKER = "broker.hivemq.com"
@@ -22,9 +23,10 @@ def connect_mqtt():
         return None
 
 def mqqt_send(data):
+    payload = json.dumps(data)
     try:
         if mqtt_client is not None:  # Ověření, zda mqtt_client není None
-            mqtt_client.publish(MQTT_TOPIC, data)
+            mqtt_client.publish(MQTT_TOPIC, payload)
         else:
             print("MQTT klient neni inicializovan. Nelze odeslat zpravu.")
     except Exception as e:
