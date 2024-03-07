@@ -9,6 +9,7 @@ import SignalLED as sl
 from machine import Pin
 from time import sleep
 import mqtt
+import where2go
 
 # Define pins for the motor and sonar
 motor_pins = [Pin(2, Pin.OUT), Pin(3, Pin.OUT), Pin(4, Pin.OUT), Pin(5, Pin.OUT)]
@@ -21,7 +22,7 @@ point_distance = 10	# Distance between points in cm
 # Create a periscope object
 scope = periscope.periscope(motor_pins, trigger_pin, echo_pin)
 
-map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
+#map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
 def spawn_car(map_plane, x, y):
     if 0 < x < len(map_plane) - 1 and 0 < y < len(map_plane[0]) - 1:  # Ensure coordinates are within bounds and not blocking walls
@@ -39,26 +40,32 @@ def main():
 	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
 	mqtt.mqqt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
 	while True:
-		for iterations in range(1):
-			for i in range(0, 360, 5):
-				scope.rotate(i)
-				sleep(0.1)
-				distance = scope.measure()
-				print("Angle: ", str(i), " Distance: ", str(distance))
-				x,y = scope.getXY(distance)
-				x, y = int(x/point_distance), int(y/point_distance)
-				if x < grid_size and y < grid_size:
-					try:
-						map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
-					except:
-						print("Out of range, may be a sensor failure")
+		map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
+
+		for i in range(0, 360, 5):
+			scope.rotate(i)
+			sleep(0.1)
+			distance = scope.measure()
+			print("Angle: ", str(i), " Distance: ", str(distance))
+			x,y = scope.getXY(distance)
+			x, y = int(x/point_distance), int(y/point_distance)
+			if x < grid_size and y < grid_size:
+				try:
+					map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
+				except:
+					print("Out of range, may be a sensor failure")
+		
 		print("Scan finished. Printing map:")
 		sl.red()
 		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
 			print(str(map_plane[i]))
 		mqtt.mqqt_send(map_plane)
-		print(map_plane)
+
+		print(where2go.GenerateMove(map_plane))
+
+		mqtt.mqqt_send("Program Done...")
+		print("Program Done...")
 		sleep(1)
 
 
