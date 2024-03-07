@@ -62,7 +62,7 @@ def main():
 			print(str(map_plane[i]))
 		mqtt.mqqt_send(map_plane)
 
-		print(where2go.GenerateMove(map_plane))
+		print(where2go.GenerateMove(map_plane)) # později bude přes UART posilat prikazy podvozku
 
 		mqtt.mqqt_send("Program Done...")
 		print("Program Done...")
