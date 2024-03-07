@@ -10,8 +10,8 @@ motor_pins = [machine.Pin(2, machine.Pin.OUT), machine.Pin(3, machine.Pin.OUT), 
 step_sequence = [[1, 0, 0, 1], [1, 0, 0, 0], [1, 1, 0, 0], [0, 1, 0, 0], [0, 1, 1, 0], [0, 0, 1, 0], [0, 0, 1, 1], [0, 0, 0, 1]]
 
 # velikost mapy
-room_length = 30
-room_width = 30
+room_length = 20
+room_width = 20
 
 # pomocná proměná
 measurement_count = 0
@@ -111,7 +111,6 @@ def distance_to_map(distance, sonar_orientation):
     if coord == 0:
         return
 
-    # Vypočet nové pozice na základě orientace sonaru a naměřené vzdálenosti
     if sonar_orientation == "F":
         x_sonar = x_car - coord
         y_sonar = y_car
@@ -136,7 +135,6 @@ def print_map(room_grid):
     for row in room_grid:
         print(' '.join(map(str, row)))
 
-# Hlavní smyčka programu
 try:
     room_grid = create_empty_room(room_length, room_width) # generace výchozí místnosti
     spawn_car(room_grid, 7, 7) # prida auto do mistnosti
