@@ -1,0 +1,5 @@
+{
+	"python.analysis.extraPaths": [
+		"./sonar_control/lib"
+	]
+}

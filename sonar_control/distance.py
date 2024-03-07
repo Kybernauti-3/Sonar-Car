@@ -4,7 +4,7 @@ from utime import sleep, sleep_us, ticks_us
 trigger = Pin(21, Pin.OUT)
 echo = Pin(20, Pin.IN)
 rychlost_zvuku = 0.0343
-
+print("ads")
 def vypocet_vzdalenosti():
     trigger.low()
     sleep_us(20)
@@ -25,7 +25,7 @@ def vypocet_vzdalenosti():
         vzdalenost = ((konec - zacatek) * rychlost_zvuku) / 2
         print("Vzdalenost je: ", vzdalenost, " cm.")
     except:
-        print("Chyba")
+        print("Something went wrong while measuring distance")
 
 while True:
     vypocet_vzdalenosti()
