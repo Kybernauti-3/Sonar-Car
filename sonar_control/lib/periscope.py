@@ -1,5 +1,3 @@
-# Library for stepper motor with ULN2003 driver and sonar sensor HC-SR04 on top of it
-import machine
 from time import sleep_us, ticks_us
 import math
 import SignalLED as sl
