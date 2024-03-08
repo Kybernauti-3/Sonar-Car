@@ -33,11 +33,11 @@ def mqqt_send(data):
     except Exception as e:
         print("Chyba pri odesilani na MQTT:", e)
 
-#ssid = "D31-lab"
-#key = "IoT.SPSE.lab22"
+ssid = "D31-lab"
+key = "IoT.SPSE.lab22"
 
-ssid = "Raspberry"
-key = "rpipico123"
+#ssid = "Raspberry"
+#key = "rpipico123"
 
 def do_connect():
     wlan = network.WLAN(network.STA_IF)
