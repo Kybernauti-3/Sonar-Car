@@ -10,6 +10,10 @@ from machine import Pin
 from time import sleep
 import mqtt
 import where2go
+from comms import Communication
+
+com1 = Communication(uart_id=0, baud_rate=9600)
+com1.start()
 
 # Define pins for the motor and sonar
 motor_pins = [Pin(2, Pin.OUT), Pin(3, Pin.OUT), Pin(4, Pin.OUT), Pin(5, Pin.OUT)]
@@ -62,7 +66,8 @@ def main():
 			print(str(map_plane[i]))
 		mqtt.mqqt_send(map_plane)
 
-		print(where2go.GenerateMove(map_plane)) # později bude přes UART posilat prikazy podvozku
+		pohyb = where2go.GenerateMove(map_plane)
+		com1.send(pohyb)
 
 		mqtt.mqqt_send("Program Done...")
 		print("Program Done...")

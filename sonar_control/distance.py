@@ -18,14 +18,17 @@ def vypocet_vzdalenosti():
     try:
         while echo.value() == 0:
             zacatek = ticks_us()
+            print("s")
         
         while echo.value() == 1:
             konec = ticks_us()
+            print("d")
         
         vzdalenost = ((konec - zacatek) * rychlost_zvuku) / 2
         print("Vzdalenost je: ", vzdalenost, " cm.")
-    except:
+    except Exception as e:
         print("Something went wrong while measuring distance")
+        print("Chyba:", e)
 
 while True:
     vypocet_vzdalenosti()
