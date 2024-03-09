@@ -1,7 +1,6 @@
 import machine
 from time import sleep_us, ticks_us, sleep
 import SignalLED as sl
-from umqtt.simple import MQTTClient
 
 # definování pinů na kterých jsou zapojene soucastky
 trigger_pin = machine.Pin(21, machine.Pin.OUT)
