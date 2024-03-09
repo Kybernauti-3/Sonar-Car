@@ -168,6 +168,7 @@ utime.sleep(2)
 move_right()
 utime.sleep(2)
 
+"""
 while True:
     try:
         move_forward()
@@ -188,3 +189,4 @@ while True:
         utime.sleep(2)
     except KeyboardInterrupt:
         stop()
+"""

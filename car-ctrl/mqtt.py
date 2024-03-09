@@ -1,11 +1,10 @@
 from umqtt.simple import MQTTClient
 import network
 import json
-import SignalLED as sl
 
 MQTT_BROKER = "broker.emqx.io"
-#MQTT_BROKER = "broker.hivemq.com"
 MQTT_TOPIC = "sonar"
+received_message = None
 
 def connect_mqtt():
     try:
@@ -18,16 +17,20 @@ def connect_mqtt():
     except Exception as e:
         print("An error occurred:", e)
         return None
+    
+def mqtt_callback(topic, msg):
+    global received_message
+    received_message = msg.decode('utf-8')
 
 def mqtt_send(data):
     payload = json.dumps(data)
     try:
-        if mqtt_client is not None:  # Ověření, zda mqtt_client není None
+        if mqtt_client is not None:
             mqtt_client.publish(MQTT_TOPIC, payload)
         else:
-            print("MQTT klient neni inicializovan. Nelze odeslat zpravu.")
+            print("MQTT client is not initialized. Cannot send message.")
     except Exception as e:
-        print("Chyba pri odesilani na MQTT:", e)
+        print("Error sending message to MQTT:", e)
 
 ssid = "D31-lab"
 key = "IoT.SPSE.lab22"
@@ -42,9 +45,11 @@ def connect_wifi():
             pass
     print('Network config:', wlan.ifconfig())
 
-sl.tyrkys()
 connect_wifi()
-sl.purple()
 mqtt_client = connect_mqtt() # pripojeni na mqtt
 
-mqtt_send("Pico connected")
+if mqtt_client is not None:
+    mqtt_client.set_callback(mqtt_callback)
+    mqtt_client.subscribe(MQTT_TOPIC)
+
+mqtt_send("Pico2 connected")

@@ -42,7 +42,7 @@ def main():
 	scope.setStepRatio(angle_per_step)
 	# print("Check if the periscope is in home position (facing to the front)!")
 	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
-	mqtt.mqqt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
+	mqtt.mqtt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
 	while True:
 		map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
@@ -64,12 +64,12 @@ def main():
 		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
 		for i in range(grid_size):
 			print(str(map_plane[i]))
-		mqtt.mqqt_send(map_plane)
+		mqtt.mqtt_send(map_plane)
 
 		pohyb = where2go.GenerateMove(map_plane)
 		com1.send(pohyb)
 
-		mqtt.mqqt_send("Program Done...")
+		mqtt.mqtt_send("Program Done...")
 		print("Program Done...")
 		sleep(1)
 
