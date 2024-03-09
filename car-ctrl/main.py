@@ -43,4 +43,4 @@ while True:
         else:
             print("Error")
 
-    sleep(1)
+    sleep(0.5)

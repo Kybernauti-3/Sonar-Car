@@ -167,26 +167,3 @@ move_left()
 utime.sleep(2)
 move_right()
 utime.sleep(2)
-
-"""
-while True:
-    try:
-        move_forward()
-        utime.sleep(2)
-        move_backward()
-        utime.sleep(2)
-        move_left()
-        utime.sleep(2)
-        move_right()
-        utime.sleep(2)
-        move_diagonal_forward_right()
-        utime.sleep(2)
-        move_diagonal_forward_left()
-        utime.sleep(2)
-        move_diagonal_backward_left()
-        utime.sleep(2)
-        move_diagonal_backward_right()
-        utime.sleep(2)
-    except KeyboardInterrupt:
-        stop()
-"""
