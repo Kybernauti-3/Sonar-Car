@@ -8,6 +8,7 @@ com1 = Communication(uart_id=0, baud_rate=9600)
 com1.start()
 
 while True:
+    print("SS")
     if mqtt.mqtt_client is not None:
         mqtt.mqtt_client.wait_msg()
 
@@ -28,7 +29,7 @@ while True:
 
     message = ""
     message = com1.read()
-    
+        
     if message is not None:
         print(f"Message received: {message.strip('\n')}")
 
@@ -40,7 +41,5 @@ while True:
             move_left()
         elif message == "Move right":
             move_right()
-        else:
-            print("Error")
 
-    sleep(0.5)
+    sleep(1)
