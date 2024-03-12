@@ -35,7 +35,7 @@ def spawn_car(map_plane, x, y):
     else:
         raise ValueError("Invalid car position. Coordinates must be within the room bounds.")
 
-angle_per_step = 21 # With the gearbox
+angle_per_step = 22 # With the gearbox
 
 def main():
 	scope.setAngle(0)
@@ -68,7 +68,7 @@ def main():
 
 		pohyb = where2go.GenerateMove(map_plane)
 		com1.send(pohyb)
-
+	
 		mqtt.mqtt_send("Program Done...")
 		print("Program Done...")
 		sleep(1)

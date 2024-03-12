@@ -1,14 +1,21 @@
-import machine
+from machine import Pin
 from comms import Communication
 from time import sleep
 from rotate import *
 import mqtt
 
+led = Pin("LED", Pin.OUT)
+led.on()
+sleep(1)
+led.off()
+sleep(1)
+
 com1 = Communication(uart_id=0, baud_rate=9600)
-com1.start()
+#com1.start()
+
+mqtt.received_message = "X"
 
 while True:
-    print("SS")
     if mqtt.mqtt_client is not None:
         mqtt.mqtt_client.wait_msg()
 
@@ -17,6 +24,9 @@ while True:
         mqttmessage = mqtt.received_message.strip().lower()
         if mqttmessage == "w":
             move_forward()
+            led.on()
+            sleep(0.5)
+            led.off()
         elif mqttmessage == "s":
             move_backward()
         elif mqttmessage == "a":
@@ -24,10 +34,10 @@ while True:
         elif mqttmessage == "d":
             move_right()
         else:
-            print("Error")
-        mqtt.received_message = None
+            print("Nothing")
+        mqtt.received_message = "X"
 
-    message = ""
+"""    message = ""
     message = com1.read()
         
     if message is not None:
@@ -41,5 +51,6 @@ while True:
             move_left()
         elif message == "Move right":
             move_right()
-
-    sleep(1)
+        else:
+            print("Nothing")
+    sleep(1)"""
