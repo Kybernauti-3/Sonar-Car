@@ -41,8 +41,8 @@ def main():
 	scope.setAngle(0)
 	scope.setStepRatio(angle_per_step)
 	# print("Check if the periscope is in home position (facing to the front)!")
-	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
-	mqtt.mqtt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm)")
+	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm) \nPlease wait for map to create...")
+	mqtt.mqtt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm) \nPlease wait for map to create...")
 	while True:
 		map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
