@@ -11,7 +11,7 @@ led.off()
 sleep(1)
 
 com1 = Communication(uart_id=0, baud_rate=9600)
-#com1.start()
+com1.start()
 
 mqtt.received_message = "X"
 
@@ -34,10 +34,10 @@ while True:
         elif mqttmessage == "d":
             move_right()
         else:
-            print("Nothing")
+            print("Nothing mq")
         mqtt.received_message = "X"
 
-"""    message = ""
+    message = ""
     message = com1.read()
         
     if message is not None:
@@ -45,6 +45,9 @@ while True:
 
         if message == "Move up":
             move_forward()
+            led.on()
+            sleep(0.5)
+            led.off()
         elif message == "Move down":
             move_backward()
         elif message == "Move left":
@@ -52,5 +55,5 @@ while True:
         elif message == "Move right":
             move_right()
         else:
-            print("Nothing")
-    sleep(1)"""
+            print("Nothing uart")
+    sleep(1)
