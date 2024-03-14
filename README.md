@@ -35,16 +35,15 @@ Tento program bude řídit pohyb vozítka v souřadnicovém poli. Bude přijíma
 Tento program bude kromě mapování také přijímat aktuální polohu vozítka od skriptu pro řízení vozidla. Zahrnuje:
 
 - Vytváření mapy místnosti, kde jedna jednotka bude reprezentovat 10 cm v reálném světě.
-- Přijímání aktuální polohy vozítka od skriptu pro řízení vozidla.
 - Aktualizaci mapy na základě nových dat z ultrazvukového senzoru.
-- Ukládání dat do pole nebo souboru, který reprezentuje mapu místnosti.
-- Poskytování těchto informací skriptu pro řízení vozidla na vyžádání.
+- Ukládání dat do pole, které reprezentuje mapu místnosti.
+- Poskytování těchto informací skriptu pro řízení vozidla.
 
 ## 3. Skript pro řízení vozidla na základě mapy:
 Tento skript bude řídit pohyb vozidla na základě aktuální mapy místnosti a bude poskytovat aktuální informace o svém pohybu programu pro mapování. Zahrnuje:
 
-- Pravidelně aktualizovat program pro mapování o svůj aktuální pohyb, včetně souřadnic.
 - Analýzu dat z mapy a aktuální polohy k rozhodování, kam se vozidlo má pohybovat.
-- Generování příkazů pro pohyb vozidla o určitý počet souřadnic (např. 10 cm) od překážky.
-- Odesílání těchto příkazů programu pro řízení vozítka.
+- Generování možných směrů pro pohyb vozidla.
+- Vybrat z těchto směrů takový, aby se vozidlo pohnulo pryč a zároveň zabezpečit, aby se v dalším kroku nevrátilo zpět
+- Odesílání vybraného směru programu pro řízení vozidla.
 - Tímto způsobem bude projekt umožňovat vozítku pohybovat se v místnosti, mapovat prostor a řídit svůj pohyb na základě aktuální mapy.
