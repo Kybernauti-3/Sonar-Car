@@ -154,3 +154,7 @@ def move_diagonal_backward_left():
     IN2_2.value(1)
     IN3_2.value(0)
     IN4_2.value(1)
+
+move_forward()
+sleep(1)
+move_backward()
