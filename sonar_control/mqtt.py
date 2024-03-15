@@ -14,7 +14,7 @@ def connect_mqtt():
         client.connect()
         print("Pripojeno na MQTT")
         return client
-   
+    
     except Exception as e:
         print("An error occurred:", e)
         return None
