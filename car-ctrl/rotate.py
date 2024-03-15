@@ -26,7 +26,7 @@ IN3_2 = machine.Pin(IN3_PIN_2, machine.Pin.OUT)
 IN4_2 = machine.Pin(IN4_PIN_2, machine.Pin.OUT)
 
 
-# Funkce pro zastavení
+# Funkce pro zastavení <3
 def stop():
     IN1_1.value(0)
     IN2_1.value(0)
@@ -38,28 +38,13 @@ def stop():
     IN3_2.value(0)
     IN4_2.value(0)
 
-# Funkce pro pohyb doleva
+# Funkce pro pohyb dopředu <3
 def move_forward():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(1)
     IN4_1.value(0)
 
-    IN1_2.value(1)
-    IN2_2.value(0)
-    IN3_2.value(0)
-    IN4_2.value(1)
-
-    sleep(1)
-    stop()
-
-# Funkce pro pohyb doprava
-def move_backward():
-    IN1_1.value(1)
-    IN2_1.value(0)
-    IN3_1.value(0)
-    IN4_1.value(1)
-
     IN1_2.value(0)
     IN2_2.value(1)
     IN3_2.value(1)
@@ -68,8 +53,23 @@ def move_backward():
     sleep(1)
     stop()
 
-# Funkce pro pohyb doleva
-def move_left():
+# Funkce pro pohyb dozadu <3
+def move_backward():
+    IN1_1.value(1)
+    IN2_1.value(0)
+    IN3_1.value(0)
+    IN4_1.value(1)
+
+    IN1_2.value(1)
+    IN2_2.value(0)
+    IN3_2.value(0)
+    IN4_2.value(1)
+
+    sleep(1)
+    stop()
+
+# Funkce pro pohyb doprava <3
+def move_right():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(0)
@@ -83,8 +83,8 @@ def move_left():
     sleep(1)
     stop()
 
-# Funkce pro pohyb doprava
-def move_right():
+# Funkce pro pohyb doleva <3
+def move_left():
     IN1_1.value(1)
     IN2_1.value(0)
     IN3_1.value(1)
@@ -98,8 +98,8 @@ def move_right():
     sleep(1)
     stop()
 
-# Funkce pro diagonální pohyb doprava vpřed
-def move_diagonal_forward_right():
+# Funkce pro diagonální pohyb doleva vpřed ?
+def move_diagonal_forward_left():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(0)
@@ -113,7 +113,7 @@ def move_diagonal_forward_right():
     sleep(1)
     stop()
 
-# Funkce pro diagonální pohyb doprava vzad
+# Funkce pro diagonální pohyb doprava vzad ?
 def move_diagonal_backward_right():
     IN1_1.value(1)
     IN2_1.value(0)
@@ -128,7 +128,7 @@ def move_diagonal_backward_right():
     sleep(1)
     stop()
 
-# Funkce pro diagonální pohyb doleva vpřed
+# Funkce pro diagonální pohyb doleva vpřed ?
 def move_diagonal_forward_left():
     IN1_1.value(1)
     IN2_1.value(0)
@@ -143,7 +143,7 @@ def move_diagonal_forward_left():
     sleep(1)
     stop()
 
-# Funkce pro diagonální pohyb doleva vzad
+# Funkce pro diagonální pohyb doleva vzad ?
 def move_diagonal_backward_left():
     IN1_1.value(0)
     IN2_1.value(1)
@@ -154,7 +154,3 @@ def move_diagonal_backward_left():
     IN2_2.value(1)
     IN3_2.value(0)
     IN4_2.value(1)
-
-move_forward()
-sleep(1)
-move_backward()
