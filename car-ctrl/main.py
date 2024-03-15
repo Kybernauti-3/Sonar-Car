@@ -16,7 +16,7 @@ com1.start()
 mqtt.received_message = "X"
 
 while True:
-    """if mqtt.mqtt_client is not None:
+    if mqtt.mqtt_client is not None:
         mqtt.mqtt_client.wait_msg()
 
     if mqtt.received_message is not None:
@@ -36,8 +36,8 @@ while True:
         else:
             print("Nothing mq")
         mqtt.received_message = "X"
-        """
 
+"""
     message = ""
     message = com1.read()
         
@@ -57,4 +57,4 @@ while True:
             move_right()
         else:
             print("Nothing uart")
-    sleep(1)
+    sleep(1)"""
