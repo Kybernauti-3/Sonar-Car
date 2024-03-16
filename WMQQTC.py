@@ -24,11 +24,11 @@ def send_key(key):
 
 # Function to change button color when pressed
 def change_button_color(button):
-    button.config(bg="white")  # Change button color when pressed
+    button.config(bg="gray", fg="black")  # Change button color when pressed
 
 # Function to reset button color
 def reset_button_color(button):
-    button.config(bg="#4CAF50")  # Reset button color
+    button.config(bg="#4CAF50", fg="white")  # Reset button color
 
 # Function to handle key events
 def on_key_press(event, button):
