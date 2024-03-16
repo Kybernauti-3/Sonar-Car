@@ -11,13 +11,77 @@ topic = "key_pressed"
 
 # Callback function for MQTT connection
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
+    text_output.insert(tk.END, "Connected with result code " + str(rc) + "\n")
     client.subscribe(topic)
+
+# Function to print received message from MQTT
+def on_message(client, userdata, msg):
+    message = msg.payload.decode("utf-8")
+    if message.startswith("[["):
+        plot_map_from_message(message)
+
+def plot_map_from_message(message):
+    try:
+        # Parse the map data from the message
+        mapa = eval(message)
+        mapa = np.array(mapa)
+
+        def find_biggest_number(map_array):
+            # Convert the map array to integers (assuming it contains numbers as strings)
+            xx = map_array.copy()
+            xx[xx == 'S'] = 0
+            map_array = xx.astype(int)
+            # Find the maximum value in the array
+            max_value = np.max(map_array) + 1
+            return max_value
+
+        # Replace 'S' with a blue point marker
+        x = find_biggest_number(mapa)
+        mapa[mapa == 'S'] = x
+
+        # Convert the array to integers
+        mapa = mapa.astype(int)
+
+        # Create a plot
+        plt.figure(figsize=(8, 8))
+
+        # Display the map
+        plt.imshow(mapa, cmap='binary', interpolation='nearest')
+
+        # Plot the blue square marker
+        blue_point_indices = np.where(mapa == x)
+        plt.scatter(blue_point_indices[1], blue_point_indices[0], s=100, c='blue', marker='s')  # 's' for square marker
+
+        # Add a colorbar to show the legend
+        cbar = plt.colorbar(ticks=[0, 1])
+        cbar.ax.set_yticklabels(['Free', 'Obstacle'])
+
+        # Add grid lines to visually separate each cell
+        plt.grid(True, color='black', linewidth=0.5)
+
+        # Add title and labels
+        plt.title('Map')
+        plt.xlabel('X')
+        plt.ylabel('Y')
+
+        # Show plot
+        plt.show()
+
+    except Exception as e:
+        print("Error plotting map:", e)
 
 # MQTT client setup
 client = mqtt.Client(protocol=mqtt.MQTTv311)  # Specify MQTT protocol version
 client.on_connect = on_connect
+client.on_message = on_message  # Set the on_message callback function
 client.connect(broker_address, broker_port, 60)
+
+# Subscribe to the topic
+client.subscribe(topic)
+
+# Start the MQTT loop
+client.loop_start()
+
 
 # Function to send respective key when button pressed
 def send_key(key):
@@ -51,7 +115,7 @@ def plot_map():
     try:
         mapa = eval(map_input)
     except Exception as e:
-        print("Error parsing map input:", e)
+        text_output.insert(tk.END, "Error parsing map input: " + str(e) + "\n")
         return
 
     # Convert the 2D list to a numpy array
@@ -122,9 +186,9 @@ button_s.grid(row=1, column=1, padx=5, pady=5)
 button_d = tk.Button(root, text="D", command=lambda: send_key("D"), **button_style)
 button_d.grid(row=1, column=2, padx=5, pady=5)
 button_q = tk.Button(root, text="Q", command=lambda: send_key("Q"), **button_style)
-button_q.grid(row=2, column=0, padx=5, pady=5)
+button_q.grid(row=0, column=0, padx=5, pady=5)
 button_e = tk.Button(root, text="E", command=lambda: send_key("E"), **button_style)
-button_e.grid(row=2, column=2, padx=5, pady=5)
+button_e.grid(row=0, column=2, padx=5, pady=5)
 
 # Bind key press events to individual buttons
 root.bind("<KeyPress-w>", lambda event: on_key_press(event, button_w))
@@ -141,5 +205,9 @@ entry_map.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 # Button to display plot
 btn_plot = ttk.Button(root, text="Plot Map", command=plot_map)
 btn_plot.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
+
+# Text widget for output
+text_output = tk.Text(root, height=10, width=50)
+text_output.grid(row=5, column=0, columnspan=3, padx=5, pady=5)
 
 root.mainloop()
