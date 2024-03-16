@@ -11,34 +11,42 @@ topic = "key_pressed"
 
 # Callback function for MQTT connection
 def on_connect(client, userdata, flags, rc):
-    text_output.insert(tk.END, "Connected with result code " + str(rc) + "\n")
     client.subscribe(topic)
 
 # Function to print received message from MQTT
 def on_message(client, userdata, msg):
     message = msg.payload.decode("utf-8")
     if message.startswith("[["):
-        plot_map_from_message(message)
+        plot_map(message)
 
-def plot_map_from_message(message):
+def plot_map(map_input=None):
     try:
-        # Parse the map data from the message
-        mapa = eval(message)
-        mapa = np.array(mapa)
+        if map_input is None:
+            map_input = entry_map.get()  # Get the text from the entry field
+        
+        # Check if the input is empty
+        if not map_input:
+            return
+        
+        # Parse the input string to create a 2D list
+        mapa = eval(map_input)
 
+        # Convert the 2D list to a numpy array
+        mapa = np.array(mapa)
+        
         def find_biggest_number(map_array):
             # Convert the map array to integers (assuming it contains numbers as strings)
             xx = map_array.copy()
             xx[xx == 'S'] = 0
             map_array = xx.astype(int)
             # Find the maximum value in the array
-            max_value = np.max(map_array) + 1
+            max_value = np.max(map_array)+1
             return max_value
 
         # Replace 'S' with a blue point marker
         x = find_biggest_number(mapa)
         mapa[mapa == 'S'] = x
-
+        
         # Convert the array to integers
         mapa = mapa.astype(int)
 
@@ -47,14 +55,14 @@ def plot_map_from_message(message):
 
         # Display the map
         plt.imshow(mapa, cmap='binary', interpolation='nearest')
-
+        
         # Plot the blue square marker
         blue_point_indices = np.where(mapa == x)
         plt.scatter(blue_point_indices[1], blue_point_indices[0], s=100, c='blue', marker='s')  # 's' for square marker
 
         # Add a colorbar to show the legend
-        cbar = plt.colorbar(ticks=[0, 1])
-        cbar.ax.set_yticklabels(['Free', 'Obstacle'])
+        #cbar = plt.colorbar(ticks=[0, 1])
+        #cbar.ax.set_yticklabels(['Free', 'Obstacle'])
 
         # Add grid lines to visually separate each cell
         plt.grid(True, color='black', linewidth=0.5)
@@ -101,66 +109,7 @@ def on_key_press(event, button):
     if key in ("W", "A", "S", "D", "Q", "E"):
         send_key(key)
         change_button_color(button)
-        root.after(200, lambda: reset_button_color(button))  # Reset button color after a short delay
-
-# Function to handle plotting
-def plot_map():
-    map_input = entry_map.get()  # Get the text from the entry field
-    
-    # Check if the input is empty
-    if not map_input:
-        return
-    
-    # Parse the input string to create a 2D list
-    try:
-        mapa = eval(map_input)
-    except Exception as e:
-        text_output.insert(tk.END, "Error parsing map input: " + str(e) + "\n")
-        return
-
-    # Convert the 2D list to a numpy array
-    mapa = np.array(mapa)
-    
-    def find_biggest_number(map_array):
-        # Convert the map array to integers (assuming it contains numbers as strings)
-        xx = map_array.copy()
-        xx[xx == 'S'] = 0
-        map_array = xx.astype(int)
-        # Find the maximum value in the array
-        max_value = np.max(map_array)+1
-        return max_value
-
-    # Replace 'S' with a blue point marker
-    x = find_biggest_number(mapa)
-    mapa[mapa == 'S'] = x
-    
-    # Convert the array to integers
-    mapa = mapa.astype(int)
-
-    # Create a plot
-    plt.figure(figsize=(8, 8))
-
-    # Display the map
-    plt.imshow(mapa, cmap='binary', interpolation='nearest')
-    
-    # Plot the blue square marker
-    blue_point_indices = np.where(mapa == x)
-    plt.scatter(blue_point_indices[1], blue_point_indices[0], s=100, c='blue', marker='s')  # 's' for square marker
-
-    # Add a colorbar to show the legend
-    #cbar = plt.colorbar(ticks=[0, 1])
-    #cbar.ax.set_yticklabels(['Free', 'Obstacle'])
-
-    # Add grid lines to visually separate each cell
-    plt.grid(True, color='black', linewidth=0.5)
-
-    # Add title and labels
-    plt.title('Map')
-    plt.xlabel('X')
-    plt.ylabel('Y')
-
-    # Show plot
-    plt.show()
+        root.after(1000, lambda: reset_button_color(button))  # Reset button color after a short delay
 
 # GUI Setup
 root = tk.Tk()
@@ -173,7 +122,6 @@ button_style = {
     "height": 3,  # Set button height
     "bg": "#4CAF50",  # Set background color
     "fg": "white",  # Set text color
-    "borderwidth": 0,  # Set border width
 }
 
 # Buttons for W, A, S, D, Q, E
@@ -202,12 +150,12 @@ root.bind("<KeyPress-e>", lambda event: on_key_press(event, button_e))
 entry_map = ttk.Entry(root, width=30)
 entry_map.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 
-# Button to display plot
-btn_plot = ttk.Button(root, text="Plot Map", command=plot_map)
-btn_plot.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
+# Create a style for the button
+button_plot_style = ttk.Style()
+button_plot_style.configure("Plot.TButton", font=("Helvetica", 14), foreground="black")
 
-# Text widget for output
-text_output = tk.Text(root, height=10, width=50)
-text_output.grid(row=5, column=0, columnspan=3, padx=5, pady=5)
+# Button to display plot
+btn_plot = ttk.Button(root, text="Plot Map", command=plot_map, style="Plot.TButton")
+btn_plot.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
 
 root.mainloop()
