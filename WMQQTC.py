@@ -34,66 +34,10 @@ def reset_button_color(button):
 # Function to handle key events
 def on_key_press(event, button):
     key = event.keysym.upper()
-    if key in ("W", "A", "S", "D"):
+    if key in ("W", "A", "S", "D", "Q", "E"):
         send_key(key)
         change_button_color(button)
         root.after(200, lambda: reset_button_color(button))  # Reset button color after a short delay
-
-def on_message(client, userdata, msg):
-    message = msg.payload.decode("utf-8")
-    if message.startswith("[["):
-        plot_map_from_message(message)
-
-def plot_map_from_message(message):
-    try:
-        # Parse the map data from the message
-        mapa = eval(message)
-        mapa = np.array(mapa)
-
-        def find_biggest_number(map_array):
-            # Convert the map array to integers (assuming it contains numbers as strings)
-            xx = map_array.copy()
-            xx[xx == 'S'] = 0
-            map_array = xx.astype(int)
-            # Find the maximum value in the array
-            max_value = np.max(map_array) + 1
-            return max_value
-
-        # Replace 'S' with a blue point marker
-        x = find_biggest_number(mapa)
-        mapa[mapa == 'S'] = x
-
-        # Convert the array to integers
-        mapa = mapa.astype(int)
-
-        # Create a plot
-        plt.figure(figsize=(8, 8))
-
-        # Display the map
-        plt.imshow(mapa, cmap='binary', interpolation='nearest')
-
-        # Plot the blue square marker
-        blue_point_indices = np.where(mapa == x)
-        plt.scatter(blue_point_indices[1], blue_point_indices[0], s=100, c='blue', marker='s')  # 's' for square marker
-
-        # Add a colorbar to show the legend
-        #cbar = plt.colorbar(ticks=[0, 1])
-        #cbar.ax.set_yticklabels(['Free', 'Obstacle'])
-
-        # Add grid lines to visually separate each cell
-        plt.grid(True, color='black', linewidth=0.5)
-
-        # Add title and labels
-        plt.title('Map')
-        plt.xlabel('X')
-        plt.ylabel('Y')
-
-        # Show plot
-        plt.show()
-
-    except Exception as e:
-        print("Error plotting map:", e)
-
 
 # Function to handle plotting
 def plot_map():
@@ -168,7 +112,7 @@ button_style = {
     "borderwidth": 0,  # Set border width
 }
 
-# Buttons for W, A, S, D
+# Buttons for W, A, S, D, Q, E
 button_w = tk.Button(root, text="W", command=lambda: send_key("W"), **button_style)
 button_w.grid(row=0, column=1, padx=5, pady=5)
 button_a = tk.Button(root, text="A", command=lambda: send_key("A"), **button_style)
@@ -177,19 +121,25 @@ button_s = tk.Button(root, text="S", command=lambda: send_key("S"), **button_sty
 button_s.grid(row=1, column=1, padx=5, pady=5)
 button_d = tk.Button(root, text="D", command=lambda: send_key("D"), **button_style)
 button_d.grid(row=1, column=2, padx=5, pady=5)
+button_q = tk.Button(root, text="Q", command=lambda: send_key("Q"), **button_style)
+button_q.grid(row=2, column=0, padx=5, pady=5)
+button_e = tk.Button(root, text="E", command=lambda: send_key("E"), **button_style)
+button_e.grid(row=2, column=2, padx=5, pady=5)
 
 # Bind key press events to individual buttons
 root.bind("<KeyPress-w>", lambda event: on_key_press(event, button_w))
 root.bind("<KeyPress-a>", lambda event: on_key_press(event, button_a))
 root.bind("<KeyPress-s>", lambda event: on_key_press(event, button_s))
 root.bind("<KeyPress-d>", lambda event: on_key_press(event, button_d))
+root.bind("<KeyPress-q>", lambda event: on_key_press(event, button_q))
+root.bind("<KeyPress-e>", lambda event: on_key_press(event, button_e))
 
 # Input field for map data
 entry_map = ttk.Entry(root, width=30)
-entry_map.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
+entry_map.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 
 # Button to display plot
 btn_plot = ttk.Button(root, text="Plot Map", command=plot_map)
-btn_plot.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
+btn_plot.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
 
 root.mainloop()
