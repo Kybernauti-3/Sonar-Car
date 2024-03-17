@@ -9,6 +9,8 @@ broker_address = "broker.emqx.io"
 broker_port = 1883
 topic = "key_pressed"
 
+cool = 1000
+
 # Callback function for MQTT connection
 def on_connect(client, userdata, flags, rc):
     client.subscribe(topic)
@@ -90,26 +92,47 @@ client.subscribe(topic)
 # Start the MQTT loop
 client.loop_start()
 
+# Global variable to track cooldown
+cooldown_active = False
 
 # Function to send respective key when button pressed
 def send_key(key):
+    global cooldown_active
+    
+    if cooldown_active:
+        return
+    
+    cooldown_active = True
     client.publish(topic, key)
+    root.after(cool, lambda: reset_cooldown())
+
+# Function to reset cooldown
+def reset_cooldown():
+    global cooldown_active
+    cooldown_active = False
 
 # Function to change button color when pressed
 def change_button_color(button):
-    button.config(bg="gray", fg="black")  # Change button color when pressed
+    button.config(bg="#FF6347")  # Change button color when pressed
+
+def change_button_colorx(button):
+    button.config(bg="blue")  # Change button color when pressed
 
 # Function to reset button color
 def reset_button_color(button):
-    button.config(bg="#4CAF50", fg="white")  # Reset button color
+    button.config(bg="#4CAF50")  # Reset button color after a short delay
 
 # Function to handle key events
 def on_key_press(event, button):
     key = event.keysym.upper()
     if key in ("W", "A", "S", "D", "Q", "E"):
-        send_key(key)
-        change_button_color(button)
-        root.after(1000, lambda: reset_button_color(button))  # Reset button color after a short delay
+        if not cooldown_active:  # Check if cooldown is not active
+            send_key(key)
+            change_button_color(button)
+            root.after(cool, lambda: reset_button_color(button))  # Reset button color after a short delay
+        else:
+            change_button_colorx(button)
+            root.after(cool, lambda: reset_button_color(button))  # Reset button color after a short delay
 
 # GUI Setup
 root = tk.Tk()
@@ -147,15 +170,37 @@ root.bind("<KeyPress-q>", lambda event: on_key_press(event, button_q))
 root.bind("<KeyPress-e>", lambda event: on_key_press(event, button_e))
 
 # Input field for map data
-entry_map = ttk.Entry(root, width=30)
+entry_map = ttk.Entry(root, width=30, font=('Helvetica', 12), foreground='#008080', background='#F0FFFF')
 entry_map.grid(row=3, column=0, columnspan=3, padx=5, pady=5)
 
 # Create a style for the button
 button_plot_style = ttk.Style()
-button_plot_style.configure("Plot.TButton", font=("Helvetica", 14), foreground="black")
+button_plot_style.configure("Plot.TButton", font=("Helvetica", 14), foreground="black", background="#20B2AA")
 
 # Button to display plot
 btn_plot = ttk.Button(root, text="Plot Map", command=plot_map, style="Plot.TButton")
 btn_plot.grid(row=4, column=0, columnspan=3, padx=5, pady=5)
 
+# Beautify the layout
+root.configure(bg='#F0F8FF')  # Set background color for the root window
+
+# Add some padding to the root window
+root.padding = 10
+root.grid_rowconfigure(5, minsize=20)  # Add some space between the button and the entry field
+root.grid_columnconfigure(3, minsize=20)  # Add some space between the button and the entry field
+
+# Add a label for the entry field
+label_map = ttk.Label(root, text="Enter Map Data:", font=("Helvetica", 12), background='#F0F8FF')
+label_map.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
+
+# Center the window on the screen
+window_width = 350
+window_height = 400
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x_coordinate = int((screen_width / 2) - (window_width / 2))
+y_coordinate = int((screen_height / 2) - (window_height / 2))
+root.geometry(f"{window_width}x{window_height}+{x_coordinate}+{y_coordinate}")
+
+# Run the GUI
 root.mainloop()

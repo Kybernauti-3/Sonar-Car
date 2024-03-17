@@ -24,9 +24,6 @@ while True:
         mqttmessage = mqtt.received_message.strip().lower()
         if mqttmessage == "w":
             move_forward()
-            led.on()
-            sleep(0.5)
-            led.off()
         elif mqttmessage == "s":
             move_backward()
         elif mqttmessage == "a":
