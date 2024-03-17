@@ -60,7 +60,7 @@ def plot_map(map_input=None):
         
         # Plot the blue square marker
         blue_point_indices = np.where(mapa == x)
-        plt.scatter(blue_point_indices[1], blue_point_indices[0], s=100, c='blue', marker='s')  # 's' for square marker
+        plt.scatter(blue_point_indices[1], blue_point_indices[0], s=200, c='blue', marker='s')  # Increased marker size to 200
 
         # Add a colorbar to show the legend
         #cbar = plt.colorbar(ticks=[0, 1])
