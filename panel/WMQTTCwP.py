@@ -136,7 +136,7 @@ def on_key_press(event, button):
 
 # GUI Setup
 root = tk.Tk()
-root.title("Wireless Controller with Plotter")
+root.title("Wireless MQTT Controller with Plotter")
 
 # Configure button style
 button_style = {
