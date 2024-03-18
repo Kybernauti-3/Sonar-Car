@@ -7,6 +7,7 @@
 import periscope
 import SignalLED as sl
 from machine import Pin
+import machine
 from time import sleep
 import mqtt
 import where2go
@@ -38,41 +39,44 @@ def spawn_car(map_plane, x, y):
 angle_per_step = 22 # With the gearbox
 
 def main():
-	scope.setAngle(0)
-	scope.setStepRatio(angle_per_step)
-	# print("Check if the periscope is in home position (facing to the front)!")
-	print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm) \nPlease wait for map to create...")
-	mqtt.mqtt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm). Please wait for map to create...")
-	while True:
-		map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
+	try:
+		scope.setAngle(0)
+		scope.setStepRatio(angle_per_step)
+		print("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm) \nPlease wait for map to create...")
+		mqtt.mqtt_send("Map is set to " + str(grid_size) + "x" + str(grid_size) + " grid with " + str(point_distance) + " cm distance between points (" + str(grid_size*point_distance) + "x" + str(grid_size*point_distance) + " cm). Please wait for map to create...")
+		while True:
+			map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
-		for i in range(0, 360, 5):
-			scope.rotate(i)
-			sleep(0.1)
-			distance = scope.measure()
-			print("Angle: ", str(i), " Distance: ", str(distance))
-			x,y = scope.getXY(distance)
-			x, y = int(x/point_distance), int(y/point_distance)
-			if x < grid_size and y < grid_size:
-				try:
-					map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
-				except:
-					print("Out of range, may be a sensor failure")
+			for i in range(0, 360, 5):
+				scope.rotate(i)
+				sleep(0.1)
+				distance = scope.measure()
+				print("Angle: ", str(i), " Distance: ", str(distance))
+				x,y = scope.getXY(distance)
+				x, y = int(x/point_distance), int(y/point_distance)
+				if x < grid_size and y < grid_size:
+					try:
+						map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
+					except:
+						print("Out of range, may be a sensor failure")
+			
+			print("Scan finished. Printing map:")
+			sl.red()
+			spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
+			for i in range(grid_size):
+				print(str(map_plane[i]))
+			mqtt.mqtt_send(map_plane)
+
+			pohyb = where2go.GenerateMove(map_plane)
+			com1.send(pohyb)
 		
-		print("Scan finished. Printing map:")
-		sl.red()
-		spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
-		for i in range(grid_size):
-			print(str(map_plane[i]))
-		mqtt.mqtt_send(map_plane)
-
-		pohyb = where2go.GenerateMove(map_plane)
-		com1.send(pohyb)
-	
-		mqtt.mqtt_send("Program Done...")
-		print("Program Done...")
-		sleep(1)
-
+			mqtt.mqtt_send("Program Done...")
+			print("Program Done...")
+			sleep(1)
+	except OSError:
+		machine.reset()
+	except Exception as e:
+		print("An unexpected error occurred:", e)
 
 if __name__ == "__main__":
 	sleep(5)

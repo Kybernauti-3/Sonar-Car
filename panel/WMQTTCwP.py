@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 import paho.mqtt.client as mqtt
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -20,6 +22,8 @@ def on_message(client, userdata, msg):
     message = msg.payload.decode("utf-8")
     if message.startswith("[["):
         plot_map(message)
+    else:
+        append_mqtt_message(message)
 
 def plot_map(map_input=None):
     try:
@@ -79,6 +83,13 @@ def plot_map(map_input=None):
 
     except Exception as e:
         print("Error plotting map:", e)
+
+# Function to append MQTT messages to the Text widget
+def append_mqtt_message(message):
+    mqtt_text.configure(state='normal')  # Enable the Text widget for writing
+    mqtt_text.insert(tk.END, message + '\n')  # Append message to the end of the Text widget
+    mqtt_text.configure(state='disabled')  # Disable the Text widget again to make it read-only
+    mqtt_text.see(tk.END)  # Scroll to the end of the Text widget to show the latest message
 
 # MQTT client setup
 client = mqtt.Client(protocol=mqtt.MQTTv311)  # Specify MQTT protocol version
@@ -193,9 +204,17 @@ root.grid_columnconfigure(3, minsize=20)  # Add some space between the button an
 label_map = ttk.Label(root, text="Enter Map Data:", font=("Helvetica", 12), background='#F0F8FF')
 label_map.grid(row=2, column=0, columnspan=3, padx=5, pady=5)
 
+# Create a Label for the MQTT log
+mqtt_log_label = ttk.Label(root, text="MQTT log", font=("Helvetica", 12), background='#F0F8FF')
+mqtt_log_label.grid(row=5, column=0, columnspan=3, padx=5, pady=5)
+
+# Create a Text widget for displaying MQTT messages
+mqtt_text = tk.Text(root, height=10, width=50, state='disabled')  # Set state to 'disabled' to make it read-only
+mqtt_text.grid(row=6, column=0, columnspan=3, padx=5, pady=5)
+
 # Center the window on the screen
-window_width = 350
-window_height = 400
+window_width = 420
+window_height = 570
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x_coordinate = int((screen_width / 2) - (window_width / 2))

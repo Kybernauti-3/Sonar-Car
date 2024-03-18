@@ -8,7 +8,12 @@ MQTT_BROKER = "broker.emqx.io"
 MQTT_TOPIC = "sonar"
 
 def connect_mqtt():
-    try:
+    print("Pripojovani na MQTT")
+    client = MQTTClient("pico", MQTT_BROKER)
+    client.connect()
+    print("Pripojeno na MQTT")
+    return client
+"""    try:
         print("Pripojovani na MQTT")
         client = MQTTClient("pico", MQTT_BROKER)
         client.connect()
@@ -17,7 +22,7 @@ def connect_mqtt():
     
     except Exception as e:
         print("An error occurred:", e)
-        return None
+        return None"""
 
 def mqtt_send(data):
     payload = json.dumps(data)
@@ -47,4 +52,4 @@ connect_wifi()
 sl.purple()
 mqtt_client = connect_mqtt() # pripojeni na mqtt
 
-mqtt_send("Pico connected")
+mqtt_send("Sonar connected")
