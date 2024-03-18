@@ -7,7 +7,7 @@ import numpy as np
 # MQTT Broker Configuration
 broker_address = "broker.emqx.io"
 broker_port = 1883
-topic = "key_pressed"
+topic = "sonar"
 
 cool = 1000
 
