@@ -98,7 +98,7 @@ def move_left():
     sleep(1)
     stop()
 
-# Funkce pro diagonální pohyb doleva vpřed ?
+# Funkce pro rotaci vlevo
 def rotate_left():
     IN1_1.value(0)
     IN2_1.value(1)
@@ -113,7 +113,7 @@ def rotate_left():
     sleep(0.3)
     stop()
 
-# Funkce pro diagonální pohyb doprava vzad ?
+# Funkce pro rotaci vpravo
 def rotate_right():
     IN1_1.value(1)
     IN2_1.value(0)

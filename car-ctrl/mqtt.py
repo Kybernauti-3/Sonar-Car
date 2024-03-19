@@ -52,4 +52,4 @@ if mqtt_client is not None:
     mqtt_client.set_callback(mqtt_callback)
     mqtt_client.subscribe(MQTT_TOPIC)
 
-mqtt_send("Pico2 connected")
+mqtt_send("Buggy connected")

@@ -14,7 +14,6 @@ import where2go
 from comms import Communication
 
 com1 = Communication(uart_id=0, baud_rate=9600)
-com1.start()
 
 # Define pins for the motor and sonar
 motor_pins = [Pin(2, Pin.OUT), Pin(3, Pin.OUT), Pin(4, Pin.OUT), Pin(5, Pin.OUT)]
@@ -63,8 +62,8 @@ def main():
 			print("Scan finished. Printing map:")
 			sl.red()
 			spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
-			for i in range(grid_size):
-				print(str(map_plane[i]))
+			"""for i in range(grid_size):
+				print(str(map_plane[i]))"""
 			mqtt.mqtt_send(map_plane)
 
 			pohyb = where2go.GenerateMove(map_plane)
@@ -77,6 +76,8 @@ def main():
 		machine.reset()
 	except Exception as e:
 		print("An unexpected error occurred:", e)
+		mqtt.mqtt_send(f"An unexpected error occurred: {e}")
+		sl.off()
 
 if __name__ == "__main__":
 	print("Sleeping 3s")

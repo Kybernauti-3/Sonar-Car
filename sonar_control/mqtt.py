@@ -37,6 +37,9 @@ def mqtt_send(data):
 ssid = "D31-lab"
 key = "IoT.SPSE.lab22"
 
+def mqtt_callback(topic, msg):
+    print((topic, msg))
+
 def connect_wifi():
     wlan = network.WLAN(network.STA_IF)
     wlan.active(True)
@@ -50,6 +53,9 @@ def connect_wifi():
 sl.tyrkys()
 connect_wifi()
 sl.purple()
+
 mqtt_client = connect_mqtt() # pripojeni na mqtt
+mqtt_client.set_callback(mqtt_callback)
+mqtt_client.subscribe(MQTT_TOPIC)
 
 mqtt_send("Sonar connected")
