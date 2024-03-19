@@ -79,5 +79,6 @@ def main():
 		print("An unexpected error occurred:", e)
 
 if __name__ == "__main__":
-	sleep(5)
+	print("Sleeping 3s")
+	sleep(3)
 	main()

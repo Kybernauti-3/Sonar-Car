@@ -2,8 +2,8 @@ import machine
 from time import sleep
 
 # Nastavení pinů pro první H-můstek
-IN1_PIN_1 = 0
-IN2_PIN_1 = 1
+IN1_PIN_1 = 20
+IN2_PIN_1 = 19
 IN3_PIN_1 = 2
 IN4_PIN_1 = 3
 
@@ -99,7 +99,7 @@ def move_left():
     stop()
 
 # Funkce pro diagonální pohyb doleva vpřed ?
-def move_diagonal_forward_left():
+def rotate_left():
     IN1_1.value(0)
     IN2_1.value(1)
     IN3_1.value(0)
@@ -110,11 +110,11 @@ def move_diagonal_forward_left():
     IN3_2.value(0)
     IN4_2.value(1)
 
-    sleep(1)
+    sleep(0.3)
     stop()
 
 # Funkce pro diagonální pohyb doprava vzad ?
-def move_diagonal_backward_right():
+def rotate_right():
     IN1_1.value(1)
     IN2_1.value(0)
     IN3_1.value(1)
@@ -125,32 +125,5 @@ def move_diagonal_backward_right():
     IN3_2.value(1)
     IN4_2.value(0)
 
-    sleep(1)
+    sleep(0.3)
     stop()
-
-# Funkce pro diagonální pohyb doleva vpřed ?
-def move_diagonal_forward_left():
-    IN1_1.value(1)
-    IN2_1.value(0)
-    IN3_1.value(1)
-    IN4_1.value(0)
-
-    IN1_2.value(1)
-    IN2_2.value(0)
-    IN3_2.value(1)
-    IN4_2.value(0)
-
-    sleep(1)
-    stop()
-
-# Funkce pro diagonální pohyb doleva vzad ?
-def move_diagonal_backward_left():
-    IN1_1.value(0)
-    IN2_1.value(1)
-    IN3_1.value(0)
-    IN4_1.value(1)
-
-    IN1_2.value(0)
-    IN2_2.value(1)
-    IN3_2.value(0)
-    IN4_2.value(1)

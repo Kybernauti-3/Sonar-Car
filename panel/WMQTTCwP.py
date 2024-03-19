@@ -92,7 +92,7 @@ def append_mqtt_message(message):
     mqtt_text.see(tk.END)  # Scroll to the end of the Text widget to show the latest message
 
 # MQTT client setup
-client = mqtt.Client(protocol=mqtt.MQTTv311)  # Specify MQTT protocol version
+client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION1)  # Specify MQTT protocol version
 client.on_connect = on_connect
 client.on_message = on_message  # Set the on_message callback function
 client.connect(broker_address, broker_port, 60)

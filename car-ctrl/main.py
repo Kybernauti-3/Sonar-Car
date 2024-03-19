@@ -4,12 +4,6 @@ from time import sleep
 from rotate import *
 import mqtt
 
-led = Pin("LED", Pin.OUT)
-led.on()
-sleep(1)
-led.off()
-sleep(1)
-
 com1 = Communication(uart_id=0, baud_rate=9600)
 com1.start()
 
@@ -30,6 +24,10 @@ while True:
             move_left()
         elif mqttmessage == "d":
             move_right()
+        elif mqttmessage == "q":
+            rotate_left()
+        elif mqttmessage == "e":
+            rotate_right()
         else:
             print("Nothing mq")
         mqtt.received_message = "X"

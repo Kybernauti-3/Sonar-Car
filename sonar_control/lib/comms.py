@@ -14,7 +14,7 @@ class Communication:
         if baud_rate: self.baud_rate = baud_rate
 
         # set the baud rate
-        self.uart = UART(self.uart_id,self.baud_rate)
+        self.uart = UART(self.uart_id,self.baud_rate, tx = Pin(12), rx = Pin(13))
 
         # Initialise the UART serial port
         self.uart.init()
@@ -30,7 +30,7 @@ class Communication:
         self.send(message)
 
     def read(self)->str:
-        start_time = time_ns()
+        start_time = time_ns()/1000
         current_time = start_time
         new_line = False
         message = ""
