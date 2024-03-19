@@ -68,10 +68,11 @@ def main():
 
 			pohyb = where2go.GenerateMove(map_plane)
 			com1.send(pohyb)
-		
+
 			mqtt.mqtt_send("Program Done...")
 			print("Program Done...")
 			sleep(1)
+
 	except OSError:
 		machine.reset()
 	except Exception as e:
