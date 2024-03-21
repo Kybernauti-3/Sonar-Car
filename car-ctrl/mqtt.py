@@ -9,7 +9,7 @@ received_message = None
 def connect_mqtt():
     try:
         print("Pripojovani na MQTT")
-        client = MQTTClient("pico", MQTT_BROKER)
+        client = MQTTClient("pico2", MQTT_BROKER)
         client.connect()
         print("Pripojeno na MQTT")
         return client

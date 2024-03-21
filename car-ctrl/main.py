@@ -6,11 +6,11 @@ import mqtt
 
 com1 = Communication(uart_id=0, baud_rate=9600)
 
-mqtt.received_message = "X"
 
 while True:
-    if mqtt.mqtt_client is not None:
-        mqtt.mqtt_client.wait_msg()
+    mqtt.received_message = None
+
+    mqtt.mqtt_client.check_msg()
 
     if mqtt.received_message is not None:
         print(f"Message received from MQTT: {mqtt.received_message}")
@@ -28,8 +28,7 @@ while True:
         elif mqttmessage == "e":
             rotate_right()
         else:
-            print("Nothing mq")
-        mqtt.received_message = "X"
+            print("Nothing mqtt")
 
     message = ""
     message = com1.read()
@@ -47,3 +46,4 @@ while True:
             move_right()
         else:
             print("Nothing uart")
+    sleep(1)

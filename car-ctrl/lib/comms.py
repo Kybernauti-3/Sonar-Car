@@ -42,5 +42,5 @@ class Communication:
                     message = message.strip('\n')
                     # print(f'received message: {message}')
                     return message
-        else:
-            return None
+            else:
+                return None
