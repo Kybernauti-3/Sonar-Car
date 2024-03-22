@@ -12,6 +12,8 @@ from time import sleep
 import mqtt
 import where2go
 from comms import Communication
+import gc
+gc.enable()
 
 com1 = Communication(uart_id=0, baud_rate=9600)
 
@@ -47,18 +49,23 @@ def main():
 			map_plane = [[0 for i in range(grid_size)] for j in range(grid_size)]
 
 			for i in range(0, 360, 5):
+				print("Rotating...")
 				scope.rotate(i)
 				sleep(0.1)
+				print("Measuring...")
 				distance = scope.measure()
 				print("Angle: ", str(i), " Distance: ", str(distance))
 				x,y = scope.getXY(distance)
+				print("XY1 ok")
 				x, y = int(x/point_distance), int(y/point_distance)
+				print("XY2 ok")
 				if x < grid_size and y < grid_size:
 					try:
 						map_plane[int(grid_size/2 + x)][int(grid_size/2 + y)] += 1
 					except:
 						print("Out of range, may be a sensor failure")
-			
+
+			gc.collect()
 			print("Scan finished. Printing map:")
 			sl.red()
 			spawn_car(map_plane, int(grid_size/2), int(grid_size/2))
@@ -82,5 +89,6 @@ def main():
 
 if __name__ == "__main__":
 	print("Sleeping 3s")
+	gc.collect()
 	sleep(3)
 	main()
