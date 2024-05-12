@@ -8,10 +8,10 @@
     "micropico.syncFolder": "",
     "micropico.openOnStart": true,
     "python.analysis.typeshedPaths": [
-        ".vscode\\Pico-W-Stub"
+        "~\\.micropico-stubs\\included"
     ],
     "python.analysis.extraPaths": [
-        ".vscode\\Pico-W-Stub",
-		"lib"
+        "lib",
+        "~\\.micropico-stubs\\included"
     ]
 }
